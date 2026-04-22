@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import AppLayout from "@/components/layout/AppLayout";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useAuthStore } from "@/store/authStore";
 
 const Landing = lazy(() => import("@/pages/Landing"));
@@ -47,7 +48,7 @@ function AppRouter() {
 
         {/* Private — redirect to /login if not logged in */}
         <Route element={<ProtectedRoute />}>
-          <Route element={<AppLayout />}>
+          <Route element={<DashboardLayout />}>
             <Route path="/home" element={<Home />} />
           </Route>
         </Route>

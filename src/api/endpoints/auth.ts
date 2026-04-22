@@ -31,7 +31,6 @@ export const signUp = async (body: {
 };
 
 export const signOut = async (): Promise<SignoutResponse> => {
-  // refresh_token is an httpOnly cookie — sent automatically by the browser
   const { data } = await apiClient.POST('/auth/signout', {});
   return data!;
 };

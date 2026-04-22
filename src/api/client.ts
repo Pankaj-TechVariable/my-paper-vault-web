@@ -14,7 +14,7 @@ const PUBLIC_ENDPOINTS = [
 
 const fetchWithNetworkError: typeof fetch = async (input, init) => {
   try {
-    return await fetch(input, init);
+    return await fetch(input, { credentials: "include", ...init });
   } catch {
     throw new AppError("Network error", "NETWORK_ERROR");
   }
@@ -38,7 +38,6 @@ const refreshAccessToken = async (): Promise<string | null> => {
     if (!session) return null;
 
     try {
-      // refresh_token is an httpOnly cookie — sent automatically via credentials: "include"
       const res = await fetch(`${env.apiUrl}/auth/refresh-token`, {
         method: "POST",
         credentials: "include",

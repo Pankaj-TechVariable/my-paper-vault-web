@@ -45,9 +45,9 @@ export const useSignIn = () => {
 };
 
 export const useSignOut = () => {
-  const clearSession = useAuthStore(state => state.clearSession);
+  const clearSession = useAuthStore((state) => state.clearSession);
 
-  return useMutation<SignoutResponse, AppError, { refresh_token: string }>({
+  return useMutation<SignoutResponse, AppError, void>({
     mutationFn: signOut,
     onSuccess: data => {
       if (!data.success) {

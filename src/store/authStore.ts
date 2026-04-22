@@ -5,7 +5,7 @@ interface AuthTokens {
   id_token: string;
   expires_in: number;
   token_type: string;
-  // refresh_token is stored as httpOnly cookie by the server — never held in JS
+  // refresh_token is set as httpOnly cookie by the server — not stored in JS
 }
 
 export interface AuthUser {

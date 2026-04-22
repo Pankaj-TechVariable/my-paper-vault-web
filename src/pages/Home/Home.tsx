@@ -1,220 +1,305 @@
+import { useNavigate } from "react-router-dom";
 import {
-  FiShield,
-  FiLock,
-  FiServer,
-  FiArrowRight,
-} from 'react-icons/fi'
-import {
-  MdCreditCard,
-  MdFlight,
-  MdDirectionsCar,
-  MdLocalHospital,
-  MdSchool,
-  MdHome,
-} from 'react-icons/md'
+  HiOutlineArchive,
+  HiOutlineUsers,
+  HiOutlineCollection,
+  HiOutlineLink,
+  HiOutlineShieldCheck,
+  HiOutlineLockClosed,
+} from "react-icons/hi";
+import { MdVerifiedUser } from "react-icons/md";
 
-const features = [
-  { icon: <FiLock size={20} />, label: 'Zero Access Architecture' },
-  { icon: <FiServer size={20} />, label: 'AWS Hosted' },
-  { icon: <FiShield size={20} />, label: 'End To End Encryption' },
-  { icon: <MdCreditCard size={20} />, label: 'You Control All Access' },
-]
+const recentDocs = [
+  {
+    name: "Certificate of Occupancy",
+    category: "Land & Property",
+    badgeClass: "bg-blue-100 text-blue-700",
+    thumbBg: "bg-green-100 text-green-700",
+    date: "Jan 15, 2024",
+    access: "Owner",
+  },
+  {
+    name: "National ID Card",
+    category: "Identity",
+    badgeClass: "bg-purple-100 text-purple-700",
+    thumbBg: "bg-purple-100 text-purple-700",
+    date: "Jan 12, 2024",
+    access: "Link",
+  },
+  {
+    name: "International Passport",
+    category: "Government",
+    badgeClass: "bg-blue-100 text-blue-700",
+    thumbBg: "bg-blue-100 text-blue-700",
+    date: "Jan 10, 2024",
+    access: "Owner",
+  },
+  {
+    name: "Court Judgment Document",
+    category: "Legal",
+    badgeClass: "bg-orange-100 text-orange-700",
+    thumbBg: "bg-orange-100 text-orange-700",
+    date: "Jan 8, 2024",
+    access: "Owner",
+  },
+  {
+    name: "Bank Statement",
+    category: "Financial",
+    badgeClass: "bg-green-100 text-green-700",
+    thumbBg: "bg-green-100 text-green-700",
+    date: "Jan 5, 2024",
+    access: "Owner",
+  },
+];
 
-const documents = [
+const quickActions = [
   {
-    icon: <MdCreditCard size={28} />,
-    label: 'National ID & Voter\'s Card',
-    color: 'bg-green-100 text-green-600',
+    icon: <HiOutlineArchive size={22} />,
+    title: "Document Archive",
+    desc: "Browse all documents",
+    to: "/documents",
   },
   {
-    icon: <MdFlight size={28} />,
-    label: 'International Passport',
-    color: 'bg-blue-100 text-blue-600',
+    icon: <HiOutlineUsers size={22} />,
+    title: "Family Access",
+    desc: "Manage sharing",
+    to: "/family",
   },
   {
-    icon: <MdDirectionsCar size={28} />,
-    label: 'Driver\'s License & Vehicle Papers',
-    color: 'bg-orange-100 text-orange-600',
+    icon: <HiOutlineCollection size={22} />,
+    title: "Family Vaults",
+    desc: "Shared with you",
+    to: "/vaults",
   },
   {
-    icon: <MdLocalHospital size={28} />,
-    label: 'NHIS Card & Health Records',
-    color: 'bg-red-100 text-red-600',
+    icon: <HiOutlineLink size={22} />,
+    title: "Create Link",
+    desc: "Secure upload link",
+    to: "/links",
   },
-  {
-    icon: <MdSchool size={28} />,
-    label: 'WAEC/NECO Certificates',
-    color: 'bg-purple-100 text-purple-600',
-  },
-  {
-    icon: <MdHome size={28} />,
-    label: 'C of O & Property Docs',
-    color: 'bg-green-100 text-green-700',
-  },
-]
+];
 
-const steps = [
+const securityItems = [
   {
-    title: 'Create Your Vault',
-    desc: 'Sign up and set up your secure vault with a master password. Your vault is encrypted end-to-end.',
+    label: "MFA",
+    icon: <HiOutlineLockClosed size={14} />,
+    badge: "Enabled",
+    badgeClass: "bg-green-100 text-green-700",
   },
   {
-    title: 'Upload Documents',
-    desc: 'Scan or upload photos of your important documents. Organize them by category for easy access.',
+    label: "Encryption",
+    icon: <HiOutlineShieldCheck size={14} />,
+    badge: "Active",
+    badgeClass: "bg-green-100 text-green-700",
   },
   {
-    title: 'Access Anytime',
-    desc: 'View your documents from any device. Share securely with family or authorities when needed.',
+    label: "Active Links",
+    icon: <HiOutlineLink size={14} />,
+    badge: "4 links",
+    badgeClass: "bg-blue-100 text-blue-700",
   },
   {
-    title: 'Stay Protected',
-    desc: 'Your documents are backed up automatically. Even if your phone is lost, your vault remains safe.',
+    label: "Family Access",
+    icon: <HiOutlineUsers size={14} />,
+    badge: "3 members",
+    badgeClass: "bg-blue-100 text-blue-700",
   },
-]
+];
 
-function Home() {
+const Home = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      {/* Navbar */}
-      <header className="border-b border-gray-100 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-sm">
-              01
-            </div>
-            <span className="font-semibold text-lg tracking-tight">MyPaperVault</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-8 text-sm text-gray-600">
-            <a href="#documents" className="hover:text-primary transition-colors">Documents</a>
-            <a href="#how-it-works" className="hover:text-primary transition-colors">How It Works</a>
-            <a href="#plans" className="hover:text-primary transition-colors">Plans</a>
-          </nav>
-          <button className="bg-primary text-white text-sm px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-            Get Started
-          </button>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="px-6 py-20 max-w-6xl mx-auto">
-        <div className="max-w-2xl mx-auto text-center">
-          {/* Trust badge */}
-          <div className="inline-flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 mb-10 text-left max-w-lg">
-            <FiShield className="text-primary mt-0.5 shrink-0" size={16} />
-            <p className="text-sm text-blue-800 leading-relaxed">
-              MyPaperVault uses encryption and controlled access architecture to protect your documents.
-              Only the account holder determines who can grant access.
-            </p>
-          </div>
-
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-gray-900 leading-tight mb-5">
-            Protect Your Important Documents.{' '}
-            <span className="text-primary">Permanently.</span>
-          </h1>
-          <p className="text-lg text-gray-500 mb-10 leading-relaxed">
-            A secure digital vault for land records, identity documents, financial files, and legal paperwork.
+    <div className="px-4 md:px-8 py-6">
+      {/* Stats row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+        {/* Vault Status */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-4">
+          <p className="text-xs text-slate-400 flex items-center gap-1.5 mb-1">
+            <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
+            Vault Status
           </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="flex items-center gap-2 bg-primary text-white px-7 py-3.5 rounded-xl font-semibold text-base hover:bg-blue-700 transition-colors shadow-md shadow-blue-200">
-              Create Secure Vault <FiArrowRight size={18} />
-            </button>
-            <button
-              id="plans"
-              className="flex items-center gap-2 border border-gray-300 text-gray-700 px-7 py-3.5 rounded-xl font-semibold text-base hover:border-primary hover:text-primary transition-colors"
-            >
-              <FiShield size={16} /> View Plans
-            </button>
-          </div>
+          <p className="text-lg font-bold text-green-600">Secure</p>
+          <p className="text-xs text-slate-400 mt-0.5">
+            All systems operational
+          </p>
         </div>
 
-        {/* Feature badges */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-          {features.map((f) => (
-            <div
-              key={f.label}
-              className="flex flex-col items-center gap-2 bg-gray-50 rounded-xl px-4 py-5 text-center"
-            >
-              <span className="text-primary">{f.icon}</span>
-              <span className="text-xs font-medium text-gray-600 leading-tight">{f.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Documents */}
-      <section id="documents" className="bg-gray-50 px-6 py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Perfect for Nigerian Documents</h2>
-            <p className="text-gray-500">Store and access all your important documents in one secure place.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 max-w-3xl mx-auto">
-            {documents.map((doc) => (
-              <div
-                key={doc.label}
-                className="bg-white rounded-2xl p-6 flex flex-col items-center gap-3 text-center shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${doc.color}`}>
-                  {doc.icon}
-                </div>
-                <span className="text-sm font-medium text-gray-700 leading-snug">{doc.label}</span>
-              </div>
+        {/* Total Documents */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-4">
+          <p className="text-xs text-slate-400 mb-1">📄 Total Documents</p>
+          <p className="text-2xl font-bold text-slate-900">47</p>
+          <div className="flex gap-2 mt-1.5 flex-wrap">
+            {["10 Personal", "7 Legal", "19 Medical"].map((t) => (
+              <span key={t} className="text-xs text-slate-400">
+                {t}
+              </span>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="px-6 py-20 max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">How It Works</h2>
-          <p className="text-gray-500">Get started in minutes and keep your documents safe forever.</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-          {steps.map((step, i) => (
-            <div key={step.title} className="flex flex-col items-center text-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shrink-0">
-                {i + 1}
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">{step.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Banner */}
-      <section className="bg-primary px-6 py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Start protecting your documents today</h2>
-          <p className="text-blue-100 mb-8">Join thousands of Nigerians who trust MyPaperVault.</p>
-          <button className="bg-white text-primary px-8 py-3.5 rounded-xl font-semibold hover:bg-blue-50 transition-colors">
-            Create Free Vault
-          </button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-gray-100 px-6 py-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-primary rounded flex items-center justify-center text-white text-xs font-bold">
-              01
-            </div>
-            <span className="font-medium text-gray-600">MyPaperVault</span>
+        {/* Storage */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-4">
+          <p className="text-xs text-slate-400 mb-1">💾 Storage Used</p>
+          <p className="text-2xl font-bold text-slate-900">47%</p>
+          <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full"
+              style={{ width: "47%" }}
+            />
           </div>
-          <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-gray-600 transition-colors">Privacy</a>
-            <a href="#" className="hover:text-gray-600 transition-colors">Terms</a>
-          </div>
-          <span>© {new Date().getFullYear()} MyPaperVault. All rights reserved.</span>
+          <p className="text-xs text-slate-400 mt-1">Family Plan · 5 GB</p>
         </div>
-      </footer>
+
+        {/* MFA */}
+        <div className="bg-white rounded-2xl border border-slate-100 p-4">
+          <p className="text-xs text-slate-400 mb-1">🛡️ MFA & Encryption</p>
+          <p className="text-lg font-bold text-primary flex items-center gap-1.5">
+            <MdVerifiedUser size={18} /> Active
+          </p>
+          <p className="text-xs text-slate-400 mt-0.5">Last login: Today</p>
+        </div>
+      </div>
+
+      {/* Main two-column layout */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
+        {/* Recent Documents */}
+        <div className="xl:col-span-2 bg-white rounded-2xl border border-slate-100 p-4 md:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-bold text-slate-900">
+              Recent Documents
+            </h2>
+            <button className="text-xs text-primary hover:underline cursor-pointer">
+              View all →
+            </button>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-xs text-slate-400 border-b border-slate-100">
+                  <th className="pb-2 text-left font-medium w-8"></th>
+                  <th className="pb-2 text-left font-medium">Document Name</th>
+                  <th className="pb-2 text-left font-medium hidden sm:table-cell">
+                    Category
+                  </th>
+                  <th className="pb-2 text-left font-medium hidden md:table-cell">
+                    Date Added
+                  </th>
+                  <th className="pb-2 text-left font-medium">Access</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentDocs.map((doc) => (
+                  <tr
+                    key={doc.name}
+                    className="border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition-colors"
+                  >
+                    <td className="py-2.5 pr-2">
+                      <div
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${doc.thumbBg}`}
+                      >
+                        PDF
+                      </div>
+                    </td>
+                    <td className="py-2.5 pr-3 font-medium text-slate-800 text-xs md:text-sm">
+                      {doc.name}
+                    </td>
+                    <td className="py-2.5 pr-3 hidden sm:table-cell">
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${doc.badgeClass}`}
+                      >
+                        {doc.category}
+                      </span>
+                    </td>
+                    <td className="py-2.5 pr-3 text-xs text-slate-400 hidden md:table-cell">
+                      {doc.date}
+                    </td>
+                    <td className="py-2.5">
+                      <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-slate-100 text-slate-600">
+                        {doc.access}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Right column */}
+        <div className="flex flex-col gap-4">
+          {/* Quick Actions */}
+          <div className="bg-white rounded-2xl border border-slate-100 p-4 md:p-5">
+            <h2 className="text-sm font-bold text-slate-900 mb-3">
+              Quick Actions
+            </h2>
+            <div className="grid grid-cols-2 gap-2">
+              {quickActions.map((qa) => (
+                <button
+                  key={qa.title}
+                  onClick={() => navigate(qa.to)}
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer text-center"
+                >
+                  <span className="text-primary">{qa.icon}</span>
+                  <span className="text-xs font-semibold text-slate-800">
+                    {qa.title}
+                  </span>
+                  <span className="text-xs text-slate-400">{qa.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Plan card */}
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 cursor-pointer hover:border-amber-300 transition-colors">
+            <p className="text-xs font-semibold text-amber-800 mb-2">
+              👑 Family Plan — Currently Active
+            </p>
+            <div className="flex justify-between items-center mb-1.5">
+              <span className="text-xs text-slate-500">6 of 20 documents</span>
+              <span className="text-xs font-bold text-amber-600">30%</span>
+            </div>
+            <div className="h-1.5 bg-amber-100 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-amber-400 rounded-full"
+                style={{ width: "30%" }}
+              />
+            </div>
+            <p className="text-xs text-slate-400 mt-2">
+              Renews March 16, 2026 · ₦10,000
+            </p>
+          </div>
+
+          {/* Security Status */}
+          <div className="bg-white rounded-2xl border border-slate-100 p-4 md:p-5">
+            <h2 className="text-sm font-bold text-slate-900 mb-3">
+              Security Status
+            </h2>
+            <div className="flex flex-col gap-2.5">
+              {securityItems.map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-center justify-between text-xs"
+                >
+                  <span className="flex items-center gap-1.5 text-slate-500">
+                    {item.icon} {item.label}
+                  </span>
+                  <span
+                    className={`px-2 py-0.5 rounded-full font-medium ${item.badgeClass}`}
+                  >
+                    {item.badge}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <button className="mt-4 w-full text-xs font-semibold text-slate-600 border border-slate-200 rounded-xl py-2 hover:bg-slate-50 transition-colors cursor-pointer">
+              Manage Security →
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
