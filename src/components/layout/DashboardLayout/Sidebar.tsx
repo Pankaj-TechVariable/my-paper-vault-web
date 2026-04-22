@@ -5,11 +5,11 @@ import {
   MdOutlinePeopleAlt,
   MdOutlineFolderSpecial,
   MdOutlineLink,
-  MdOutlineShield,
   MdOutlineCreditCard,
   MdOutlineLogout,
   MdClose,
 } from "react-icons/md";
+import { FaShieldAlt } from "react-icons/fa";
 
 import logo from "@/assets/logo/logo.png";
 import Button from "@/components/common/Button/Button";
@@ -21,7 +21,7 @@ const navItems = [
   { icon: MdOutlinePeopleAlt, label: "Family Access", to: "/family" },
   { icon: MdOutlineFolderSpecial, label: "Family Vaults", to: "/vaults" },
   { icon: MdOutlineLink, label: "Upload Links", to: "/links" },
-  { icon: MdOutlineShield, label: "Security", to: "/security" },
+  { icon: FaShieldAlt, label: "Security", to: "/security" },
   { icon: MdOutlineCreditCard, label: "Subscription", to: "/subscription" },
 ];
 

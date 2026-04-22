@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import {
-  HiOutlineArchive,
-  HiOutlineUsers,
-  HiOutlineCollection,
-  HiOutlineLink,
-  HiOutlineShieldCheck,
-  HiOutlineLockClosed,
-} from "react-icons/hi";
-import { MdVerifiedUser } from "react-icons/md";
+  MdOutlineArchive,
+  MdOutlinePeopleAlt,
+  MdOutlineFolderSpecial,
+  MdOutlineLink,
+  MdOutlineShield,
+  MdOutlineLock,
+  MdVerifiedUser,
+  MdOutlineStorage,
+} from "react-icons/md";
+import { IoMdDocument } from "react-icons/io";
+import { FaShieldAlt } from "react-icons/fa";
 
 const recentDocs = [
   {
@@ -54,25 +57,25 @@ const recentDocs = [
 
 const quickActions = [
   {
-    icon: <HiOutlineArchive size={22} />,
+    icon: <MdOutlineArchive size={22} />,
     title: "Document Archive",
     desc: "Browse all documents",
     to: "/documents",
   },
   {
-    icon: <HiOutlineUsers size={22} />,
+    icon: <MdOutlinePeopleAlt size={22} />,
     title: "Family Access",
     desc: "Manage sharing",
     to: "/family",
   },
   {
-    icon: <HiOutlineCollection size={22} />,
+    icon: <MdOutlineFolderSpecial size={22} />,
     title: "Family Vaults",
     desc: "Shared with you",
     to: "/vaults",
   },
   {
-    icon: <HiOutlineLink size={22} />,
+    icon: <MdOutlineLink size={22} />,
     title: "Create Link",
     desc: "Secure upload link",
     to: "/links",
@@ -82,25 +85,25 @@ const quickActions = [
 const securityItems = [
   {
     label: "MFA",
-    icon: <HiOutlineLockClosed size={14} />,
+    icon: <MdOutlineLock size={14} />,
     badge: "Enabled",
     badgeClass: "bg-green-100 text-green-700",
   },
   {
     label: "Encryption",
-    icon: <HiOutlineShieldCheck size={14} />,
+    icon: <MdOutlineShield size={14} />,
     badge: "Active",
     badgeClass: "bg-green-100 text-green-700",
   },
   {
     label: "Active Links",
-    icon: <HiOutlineLink size={14} />,
+    icon: <MdOutlineLink size={14} />,
     badge: "4 links",
     badgeClass: "bg-blue-100 text-blue-700",
   },
   {
     label: "Family Access",
-    icon: <HiOutlineUsers size={14} />,
+    icon: <MdOutlinePeopleAlt size={14} />,
     badge: "3 members",
     badgeClass: "bg-blue-100 text-blue-700",
   },
@@ -119,7 +122,7 @@ const Home = () => {
             <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
             Vault Status
           </p>
-          <p className="text-lg font-bold text-green-600">Secure</p>
+          <p className="text-sm font-bold text-green-600">Secure</p>
           <p className="text-xs text-slate-400 mt-0.5">
             All systems operational
           </p>
@@ -127,8 +130,10 @@ const Home = () => {
 
         {/* Total Documents */}
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <p className="text-xs text-slate-400 mb-1">📄 Total Documents</p>
-          <p className="text-2xl font-bold text-slate-900">47</p>
+          <p className="flex items-center text-xs gap-2 text-slate-400 mb-1">
+            <IoMdDocument size={20} /> Total Documents
+          </p>
+          <p className="text-sm font-bold text-slate-900">47</p>
           <div className="flex gap-2 mt-1.5 flex-wrap">
             {["10 Personal", "7 Legal", "19 Medical"].map((t) => (
               <span key={t} className="text-xs text-slate-400">
@@ -140,8 +145,10 @@ const Home = () => {
 
         {/* Storage */}
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <p className="text-xs text-slate-400 mb-1">💾 Storage Used</p>
-          <p className="text-2xl font-bold text-slate-900">47%</p>
+          <p className="flex items-center gap-2 text-xs text-slate-400 mb-1">
+            <MdOutlineStorage size={20} /> Storage Used
+          </p>
+          <p className="text-sm font-bold text-slate-900">47%</p>
           <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
             <div
               className="h-full bg-primary rounded-full"
@@ -153,9 +160,11 @@ const Home = () => {
 
         {/* MFA */}
         <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <p className="text-xs text-slate-400 mb-1">🛡️ MFA & Encryption</p>
-          <p className="text-lg font-bold text-primary flex items-center gap-1.5">
-            <MdVerifiedUser size={18} /> Active
+          <p className="flex items-center gap-2  text-xs text-slate-400 mb-1">
+            <FaShieldAlt size={20} /> MFA & Encryption
+          </p>
+          <p className="text-sm font-bold text-primary flex items-center gap-1.5">
+            Active
           </p>
           <p className="text-xs text-slate-400 mt-0.5">Last login: Today</p>
         </div>
