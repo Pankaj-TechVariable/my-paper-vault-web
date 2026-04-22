@@ -13,6 +13,7 @@ import TextInput from "@/components/common/TextInput/TextInput";
 import PasswordInput from "@/components/common/PasswordInput";
 import Navbar from "@/components/layout/Navbar/Navbar";
 import { SigninSchema, type SigninFormData } from "@/schemas/auth";
+import { useSignIn } from "@/hooks/useAuth";
 
 const features = [
   {
@@ -31,17 +32,18 @@ const features = [
 
 const Login = () => {
   const navigate = useNavigate();
+  const { mutate: signIn, isPending } = useSignIn();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SigninFormData>({
     resolver: zodResolver(SigninSchema),
   });
 
-  const onSubmit = async () => {
-    navigate("/mfa");
+  const onSubmit = (data: SigninFormData) => {
+    signIn(data);
   };
 
   return (
@@ -104,7 +106,12 @@ const Login = () => {
                   type="text"
                   placeholder="your@email.com"
                   autoComplete="off"
-                  start={<HiOutlineMail className="text-slate-400 shrink-0 mr-2" size={18} />}
+                  start={
+                    <HiOutlineMail
+                      className="text-slate-400 shrink-0 mr-2"
+                      size={18}
+                    />
+                  }
                   error={errors.email?.message}
                   {...register("email")}
                 />
@@ -116,7 +123,12 @@ const Login = () => {
                   label="Password"
                   placeholder="Enter your password"
                   autoComplete="new-password"
-                  start={<HiOutlineLockClosed className="text-slate-400 shrink-0 mr-2" size={18} />}
+                  start={
+                    <HiOutlineLockClosed
+                      className="text-slate-400 shrink-0 mr-2"
+                      size={18}
+                    />
+                  }
                   error={errors.password?.message}
                   {...register("password")}
                 />
@@ -135,7 +147,7 @@ const Login = () => {
                 label="Log In"
                 variant="contained"
                 className="w-full justify-center mb-4"
-                loading={isSubmitting}
+                loading={isPending}
               />
 
               {/* Security notice */}

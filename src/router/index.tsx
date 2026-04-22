@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import AppLayout from "@/components/layout/AppLayout";
+import { useAuthStore } from "@/store/authStore";
 
 const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
@@ -12,18 +13,44 @@ const PageLoader = () => (
   </div>
 );
 
+// Requires session — redirects to /login if not authenticated
+const ProtectedRoute = () => {
+  const session = useAuthStore((s) => s.session);
+  const isLoading = useAuthStore((s) => s.isLoading);
+
+  if (isLoading) return <PageLoader />;
+  if (!session) return <Navigate to="/login" replace />;
+  return <Outlet />;
+};
+
+// Requires NO session — redirects to /home if already authenticated
+const PublicOnlyRoute = () => {
+  const session = useAuthStore((s) => s.session);
+  const isLoading = useAuthStore((s) => s.isLoading);
+
+  if (isLoading) return <PageLoader />;
+  if (session) return <Navigate to="/home" replace />;
+  return <Outlet />;
+};
+
 function AppRouter() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
-        {/* Pages with Navbar + Footer */}
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Landing />} />
-          <Route path="/home" element={<Home />} />
+        {/* Public only — redirect to /home if logged in */}
+        <Route element={<PublicOnlyRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Landing />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
         </Route>
 
-        {/* Auth pages — no Navbar/Footer */}
-        <Route path="/login" element={<Login />} />
+        {/* Private — redirect to /login if not logged in */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/home" element={<Home />} />
+          </Route>
+        </Route>
       </Routes>
     </Suspense>
   );
