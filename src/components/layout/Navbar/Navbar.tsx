@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { HiArrowRight, HiMenu, HiX } from "react-icons/hi";
 import logo from "@/assets/logo/logo.png";
 import Button from "@/components/common/Button/Button";
@@ -12,17 +12,23 @@ const navLinks = [
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const isLoginPage = pathname === "/login";
 
   const close = () => setMenuOpen(false);
 
   return (
     <>
       <nav className="border-b border-slate-100">
-        <div className="flex items-center justify-between px-6 md:px-16 py-4">
+        <div className="flex items-center justify-between px-6 md:px-16 py-2">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <img src={logo} alt="MyPaperVault" className="w-12 h-12 object-contain" />
+            <img
+              src={logo}
+              alt="MyPaperVault"
+              className="w-12 h-auto object-contain"
+            />
             <span
               className="font-extrabold text-base text-slate-900 tracking-tight"
               style={{ fontFamily: "'Sora', sans-serif" }}
@@ -42,12 +48,14 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <Button
-              label="Log In"
-              variant="contained"
-              endIcon={<HiArrowRight className="text-white" />}
-              onClick={() => navigate("/login")}
-            />
+            {!isLoginPage && (
+              <Button
+                label="Log In"
+                variant="contained"
+                endIcon={<HiArrowRight className="text-white" />}
+                onClick={() => navigate("/login")}
+              />
+            )}
           </div>
 
           {/* Burger button */}
@@ -64,7 +72,9 @@ const Navbar = () => {
       {/* Backdrop */}
       <div
         className={`fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 md:hidden ${
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          menuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
         onClick={close}
       />
@@ -78,8 +88,15 @@ const Navbar = () => {
         {/* Drawer header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="MyPaperVault" className="w-8 h-8 object-contain" />
-            <span className="font-extrabold text-sm text-slate-900" style={{ fontFamily: "'Sora', sans-serif" }}>
+            <img
+              src={logo}
+              alt="MyPaperVault"
+              className="w-8 h-8 object-contain"
+            />
+            <span
+              className="font-extrabold text-sm text-slate-900"
+              style={{ fontFamily: "'Sora', sans-serif" }}
+            >
               MyPaperVault
             </span>
           </div>
@@ -107,15 +124,20 @@ const Navbar = () => {
         </div>
 
         {/* CTA */}
-        <div className="px-6 py-6 border-t border-slate-100">
-          <Button
-            label="Log In"
-            variant="contained"
-            endIcon={<HiArrowRight className="text-white" />}
-            onClick={() => { navigate("/login"); close(); }}
-            className="w-full justify-center"
-          />
-        </div>
+        {!isLoginPage && (
+          <div className="px-6 py-6 border-t border-slate-100">
+            <Button
+              label="Log In"
+              variant="contained"
+              endIcon={<HiArrowRight className="text-white" />}
+              onClick={() => {
+                navigate("/login");
+                close();
+              }}
+              className="w-full justify-center"
+            />
+          </div>
+        )}
       </div>
     </>
   );

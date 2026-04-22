@@ -18,11 +18,11 @@ interface ButtonProps {
 
 const variantStyles: Record<Variant, { container: string; label: string }> = {
   contained: {
-    container: "bg-primary rounded-xl px-5 h-10",
+    container: "bg-primary rounded-lg px-5 h-10",
     label: "text-white font-semibold",
   },
   outlined: {
-    container: "border-2 border-primary rounded-xl px-5 h-10 bg-transparent",
+    container: "border-2 border-primary rounded-lg px-5 h-10 bg-transparent",
     label: "text-primary font-semibold",
   },
   text: {

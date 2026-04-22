@@ -4,6 +4,7 @@ import AppLayout from "@/components/layout/AppLayout";
 
 const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
+const Login = lazy(() => import("@/pages/Login"));
 
 const PageLoader = () => (
   <div className="flex-1 flex items-center justify-center min-h-64">
@@ -21,7 +22,8 @@ function AppRouter() {
           <Route path="/home" element={<Home />} />
         </Route>
 
-        {/* Auth pages (no layout) — add /login, /register here */}
+        {/* Auth pages — no Navbar/Footer */}
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Suspense>
   );
