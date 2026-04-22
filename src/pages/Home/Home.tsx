@@ -11,6 +11,7 @@ import {
 } from "react-icons/md";
 import { IoMdDocument } from "react-icons/io";
 import { FaShieldAlt } from "react-icons/fa";
+import { useDocumentCount } from "@/hooks/useDocuments";
 
 const recentDocs = [
   {
@@ -111,6 +112,29 @@ const securityItems = [
 
 const Home = () => {
   const navigate = useNavigate();
+  const { data, isLoading } = useDocumentCount();
+
+  const total = data?.data.total ?? 0;
+
+  const byDirectory = data?.data.by_directory ?? [];
+  const isOther = (name: string) =>
+    name.trim().toLowerCase() === "other important documents";
+
+  const ranked = [...byDirectory]
+    .filter((d) => !isOther(d.directory_name))
+    .sort((a, b) => b.count - a.count);
+
+  const top2 = ranked.slice(0, 2);
+  const otherCount =
+    ranked.slice(2).reduce((sum, d) => sum + d.count, 0) +
+    byDirectory
+      .filter((d) => isOther(d.directory_name))
+      .reduce((sum, d) => sum + d.count, 0);
+
+  const displayStats = [
+    ...top2.map((d) => ({ label: d.directory_name, count: d.count })),
+    { label: "Other", count: otherCount },
+  ];
 
   return (
     <div className="px-4 md:px-8 py-6">
@@ -133,14 +157,27 @@ const Home = () => {
           <p className="flex items-center text-xs gap-2 text-slate-400 mb-1">
             <IoMdDocument size={20} /> Total Documents
           </p>
-          <p className="text-sm font-bold text-slate-900">47</p>
-          <div className="flex gap-2 mt-1.5 flex-wrap">
-            {["10 Personal", "7 Legal", "19 Medical"].map((t) => (
-              <span key={t} className="text-xs text-slate-400">
-                {t}
-              </span>
-            ))}
-          </div>
+          {isLoading ? (
+            <>
+              <div className="h-4 w-8 bg-slate-200 rounded animate-pulse mb-2" />
+              <div className="flex gap-2 mt-1.5">
+                <div className="h-3 w-16 bg-slate-100 rounded animate-pulse" />
+                <div className="h-3 w-16 bg-slate-100 rounded animate-pulse" />
+                <div className="h-3 w-12 bg-slate-100 rounded animate-pulse" />
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-sm font-bold text-slate-900">{total}</p>
+              <div className="flex gap-2 mt-1.5 flex-wrap">
+                {displayStats.map((stat) => (
+                  <span key={stat.label} className="text-xs text-slate-400">
+                    {stat.label}: {stat.count}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Storage */}
