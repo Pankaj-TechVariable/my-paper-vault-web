@@ -36,7 +36,7 @@ const NavContent = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <div className="flex flex-col h-full">
-      <nav className="flex-1 px-3 py-4 overflow-y-auto">
+      <nav className="flex-1 py-4 overflow-y-auto">
         <div className="flex flex-col gap-0.5">
           {navItems.map(({ icon: Icon, label, to }) => {
             const active = pathname === to;
@@ -45,10 +45,10 @@ const NavContent = ({ onClose }: { onClose: () => void }) => {
                 key={to}
                 to={to}
                 onClick={onClose}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium no-underline transition-colors ${
+                className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium no-underline transition-colors border-r-3 ${
                   active
-                    ? "bg-primary text-white"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    ? "bg-blue-50 text-primary border-primary"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 border-transparent"
                 }`}
               >
                 <Icon size={18} className="shrink-0" />
