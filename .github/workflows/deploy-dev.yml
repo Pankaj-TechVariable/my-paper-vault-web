@@ -49,7 +49,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
       # ── 6. Upload to S3 ───────────────────────────────────────────────────
       # --delete removes files from S3 that no longer exist in dist/.
