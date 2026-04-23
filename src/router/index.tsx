@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
 const Login = lazy(() => import("@/pages/Login"));
+const DocumentArchive = lazy(() => import("@/pages/DocumentArchive"));
 
 const PageLoader = () => (
   <div className="flex-1 flex items-center justify-center min-h-64">
@@ -50,6 +51,7 @@ function AppRouter() {
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/home" element={<Home />} />
+            <Route path="/documents" element={<DocumentArchive />} />
           </Route>
         </Route>
       </Routes>

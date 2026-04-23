@@ -14,9 +14,10 @@ interface DocumentItemProps {
   document: Document;
   directory?: Directory;
   onClick?: (doc: Document) => void;
+  isSelected?: boolean;
 }
 
-const DocumentItem = ({ document, directory, onClick }: DocumentItemProps) => {
+const DocumentItem = ({ document, directory, onClick, isSelected }: DocumentItemProps) => {
   const categoryStyle = getCategoryStyle(directory?.category?.type ?? "");
 
   const date = new Date(document.created_at).toLocaleDateString("en-NG", {
@@ -28,7 +29,11 @@ const DocumentItem = ({ document, directory, onClick }: DocumentItemProps) => {
   return (
     <div
       onClick={() => onClick?.(document)}
-      className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer"
+      className={`flex items-center gap-4 p-4 rounded-2xl border transition-colors cursor-pointer ${
+        isSelected
+          ? "border-primary bg-blue-50"
+          : "border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50"
+      }`}
     >
       {/* Mime icon with category color */}
       <div

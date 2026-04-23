@@ -1,4 +1,5 @@
 import { createElement } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useDirectories } from "@/hooks/useDirectories";
@@ -8,6 +9,7 @@ import Button from "@/components/common/Button/Button";
 import RecentDocumentSkeletonRow from "./RecentDocumentSkeletonRow";
 
 const RecentDocuments = () => {
+  const navigate = useNavigate();
   const { data: docsData, isLoading: docsLoading } = useDocuments();
   const { data: dirsData, isLoading: dirsLoading } = useDirectories();
 
@@ -24,6 +26,7 @@ const RecentDocuments = () => {
           variant="text"
           className="text-xs text-primary"
           endIcon={<FaArrowRight size={12} className="text-primary" />}
+          onClick={() => navigate("/documents")}
         />
       </div>
 
