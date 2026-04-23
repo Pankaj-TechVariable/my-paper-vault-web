@@ -66,8 +66,8 @@ const NavContent = ({ onClose }: { onClose: () => void }) => {
         </div>
 
         <Button
-          label="Log Out"
-          variant="outlined"
+          label="Sign Out"
+          variant="text"
           startIcon={<MdOutlineLogout size={18} />}
           onClick={() => signOut()}
           loading={isPending}

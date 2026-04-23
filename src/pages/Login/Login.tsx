@@ -144,7 +144,7 @@ const Login = () => {
               </div>
 
               <Button
-                label="Log In"
+                label="Sign In"
                 variant="contained"
                 className="w-full justify-center mb-4"
                 loading={isPending}

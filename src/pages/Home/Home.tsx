@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import StatCard from "@/components/common/StatCard/StatCard";
 import {
   MdOutlineArchive,
   MdOutlinePeopleAlt,
@@ -6,7 +7,6 @@ import {
   MdOutlineLink,
   MdOutlineShield,
   MdOutlineLock,
-  MdVerifiedUser,
   MdOutlineStorage,
 } from "react-icons/md";
 import { IoMdDocument } from "react-icons/io";
@@ -140,24 +140,19 @@ const Home = () => {
     <div className="px-4 md:px-8 py-6">
       {/* Stats row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
-        {/* Vault Status */}
-        <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <p className="text-xs text-slate-400 flex items-center gap-1.5 mb-1">
-            <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
-            Vault Status
-          </p>
+        <StatCard
+          label="Vault Status"
+          indicator={<span className="w-2 h-2 rounded-full bg-green-500 inline-block" />}
+        >
           <p className="text-sm font-bold text-green-600">Secure</p>
-          <p className="text-xs text-slate-400 mt-0.5">
-            All systems operational
-          </p>
-        </div>
+          <p className="text-xs text-slate-400 mt-0.5">All systems operational</p>
+        </StatCard>
 
-        {/* Total Documents */}
-        <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <p className="flex items-center text-xs gap-2 text-slate-400 mb-1">
-            <IoMdDocument size={20} /> Total Documents
-          </p>
-          {isLoading ? (
+        <StatCard
+          label="Total Documents"
+          icon={<IoMdDocument size={16} />}
+          isLoading={isLoading}
+          skeleton={
             <>
               <div className="h-4 w-8 bg-slate-200 rounded animate-pulse mb-2" />
               <div className="flex gap-2 mt-1.5">
@@ -166,45 +161,30 @@ const Home = () => {
                 <div className="h-3 w-12 bg-slate-100 rounded animate-pulse" />
               </div>
             </>
-          ) : (
-            <>
-              <p className="text-sm font-bold text-slate-900">{total}</p>
-              <div className="flex gap-2 mt-1.5 flex-wrap">
-                {displayStats.map((stat) => (
-                  <span key={stat.label} className="text-xs text-slate-400">
-                    {stat.label}: {stat.count}
-                  </span>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+          }
+        >
+          <p className="text-sm font-bold text-slate-900">{total}</p>
+          <div className="flex gap-2 mt-1.5 flex-wrap">
+            {displayStats.map((stat) => (
+              <span key={stat.label} className="text-xs text-slate-400">
+                {stat.label}: {stat.count}
+              </span>
+            ))}
+          </div>
+        </StatCard>
 
-        {/* Storage */}
-        <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <p className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <MdOutlineStorage size={20} /> Storage Used
-          </p>
+        <StatCard label="Storage Used" icon={<MdOutlineStorage size={16} />}>
           <p className="text-sm font-bold text-slate-900">47%</p>
           <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full"
-              style={{ width: "47%" }}
-            />
+            <div className="h-full bg-primary rounded-full" style={{ width: "47%" }} />
           </div>
           <p className="text-xs text-slate-400 mt-1">Family Plan · 5 GB</p>
-        </div>
+        </StatCard>
 
-        {/* MFA */}
-        <div className="bg-white rounded-2xl border border-slate-100 p-4">
-          <p className="flex items-center gap-2  text-xs text-slate-400 mb-1">
-            <FaShieldAlt size={20} /> MFA & Encryption
-          </p>
-          <p className="text-sm font-bold text-primary flex items-center gap-1.5">
-            Active
-          </p>
+        <StatCard label="MFA & Encryption" icon={<FaShieldAlt size={16} />}>
+          <p className="text-sm font-bold text-primary">Active</p>
           <p className="text-xs text-slate-400 mt-0.5">Last login: Today</p>
-        </div>
+        </StatCard>
       </div>
 
       {/* Main two-column layout */}
