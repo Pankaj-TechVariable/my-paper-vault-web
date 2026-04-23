@@ -1,4 +1,5 @@
 import { createElement } from "react";
+import { MdCheckCircle, MdRadioButtonUnchecked } from "react-icons/md";
 import {
   FaChevronRight,
   FaCalendar,
@@ -14,10 +15,21 @@ interface DocumentItemProps {
   document: Document;
   directory?: Directory;
   onClick?: (doc: Document) => void;
+  onCheckToggle?: (doc: Document) => void;
   isSelected?: boolean;
+  showCheckbox?: boolean;
+  isChecked?: boolean;
 }
 
-const DocumentItem = ({ document, directory, onClick, isSelected }: DocumentItemProps) => {
+const DocumentItem = ({
+  document,
+  directory,
+  onClick,
+  onCheckToggle,
+  isSelected,
+  showCheckbox,
+  isChecked,
+}: DocumentItemProps) => {
   const categoryStyle = getCategoryStyle(directory?.category?.type ?? "");
 
   const date = new Date(document.created_at).toLocaleDateString("en-NG", {
@@ -26,23 +38,55 @@ const DocumentItem = ({ document, directory, onClick, isSelected }: DocumentItem
     year: "numeric",
   });
 
+  const handleCheckClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onCheckToggle?.(document);
+  };
+
   return (
     <div
       onClick={() => onClick?.(document)}
-      className={`flex items-center gap-4 p-4 rounded-2xl border transition-colors cursor-pointer ${
-        isSelected
+      className={`group flex items-center gap-4 p-4 rounded-2xl border transition-colors cursor-pointer ${
+        isChecked
           ? "border-primary bg-blue-50"
-          : "border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50"
+          : isSelected
+            ? "border-primary bg-blue-50"
+            : "border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50"
       }`}
     >
-      {/* Mime icon with category color */}
+      {/* Icon / checkbox toggle area */}
       <div
-        className={`w-11 h-11 shrink-0 flex items-center justify-center rounded-xl ${categoryStyle.bgColor}`}
+        onClick={handleCheckClick}
+        className="relative w-11 h-11 shrink-0 cursor-pointer"
       >
-        {createElement(getMimeIcon(document.mime_type), {
-          size: 20,
-          color: categoryStyle.iconColor,
-        })}
+        {/* Mime icon */}
+        <div
+          className={`absolute inset-0 rounded-xl flex items-center justify-center transition-opacity ${categoryStyle.bgColor} ${
+            showCheckbox
+              ? "[@media(hover:none)]:opacity-0 [@media(hover:hover)]:opacity-0"
+              : "[@media(hover:hover)]:group-hover:opacity-0"
+          }`}
+        >
+          {createElement(getMimeIcon(document.mime_type), {
+            size: 20,
+            color: categoryStyle.iconColor,
+          })}
+        </div>
+
+        {/* Checkbox — touch: only when multiselect active; pointer: hover-reveal or multiselect */}
+        <div
+          className={`absolute inset-0 items-center justify-center transition-opacity ${
+            showCheckbox
+              ? "flex opacity-100"
+              : "hidden [@media(hover:hover)]:flex opacity-0 group-hover:opacity-100"
+          }`}
+        >
+          {isChecked ? (
+            <MdCheckCircle size={26} className="text-primary" />
+          ) : (
+            <MdRadioButtonUnchecked size={26} className="text-slate-300" />
+          )}
+        </div>
       </div>
 
       {/* Info */}
@@ -78,7 +122,9 @@ const DocumentItem = ({ document, directory, onClick, isSelected }: DocumentItem
         </div>
       </div>
 
-      <FaChevronRight size={13} className="text-slate-300 shrink-0" />
+      {!showCheckbox && (
+        <FaChevronRight size={13} className="text-slate-300 shrink-0" />
+      )}
     </div>
   );
 };
