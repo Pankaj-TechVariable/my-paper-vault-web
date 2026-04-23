@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 import {
   signUp,
   signIn,
@@ -18,14 +18,14 @@ import {
   type ForgotPasswordResponse,
   type ResetPasswordResponse,
   signOut,
-} from '@/api/endpoints/auth';
-import { useAuthStore } from '@/store/authStore';
-import { AppError } from '@/errors/AppError';
-import { handleApiError } from '@/errors/errorHandler';
-import { toast } from '@/utils/toast';
+} from "@/api/endpoints/auth";
+import { useAuthStore } from "@/store/authStore";
+import { AppError } from "@/errors/AppError";
+import { handleApiError } from "@/errors/errorHandler";
+import { toast } from "@/lib/toast";
 
 export const useSignIn = () => {
-  const setSession = useAuthStore(state => state.setSession);
+  const setSession = useAuthStore((state) => state.setSession);
 
   return useMutation<
     SigninResponse,
@@ -33,9 +33,9 @@ export const useSignIn = () => {
     { email: string; password: string }
   >({
     mutationFn: signIn,
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data.success) {
-        return toast.error('Something went wrong', 'Please try again.');
+        return toast.error("Something went wrong", "Please try again.");
       }
       const { user, ...tokens } = data.data;
       setSession({ tokens, user });
@@ -49,9 +49,9 @@ export const useSignOut = () => {
 
   return useMutation<SignoutResponse, AppError, void>({
     mutationFn: signOut,
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data.success) {
-        return toast.error('Something went wrong', 'Please try again.');
+        return toast.error("Something went wrong", "Please try again.");
       }
       clearSession();
     },
@@ -70,11 +70,11 @@ export const useSignUp = () => {
     mutationFn: signUp,
     onSuccess: (data, { email, password }) => {
       if (!data.success) {
-        return toast.error('Something went wrong', 'Please try again.');
+        return toast.error("Something went wrong", "Please try again.");
       }
       toast.success(
         data?.message ||
-          'Account created successfully, please verify your email.',
+          "Account created successfully, please verify your email.",
       );
       setTempMail(email);
       setTempPassword(password);
@@ -86,13 +86,13 @@ export const useSignUp = () => {
 export const useResendCode = () => {
   return useMutation<ResendSignupCodeResponse, AppError, { email: string }>({
     mutationFn: resendVerificationCode,
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data.success) {
-        return toast.error('Something went wrong', 'Please try again.');
+        return toast.error("Something went wrong", "Please try again.");
       }
       toast.success(
         data?.message ||
-          'Verification code sent to your email, please verify your code.',
+          "Verification code sent to your email, please verify your code.",
       );
     },
     onError: handleApiError,
@@ -113,24 +113,24 @@ export const useResetPassword = () => {
     { email: string; code: string; new_password: string }
   >({
     mutationFn: resetPassword,
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data.success) {
-        return toast.error('Something went wrong', 'Please try again.');
+        return toast.error("Something went wrong", "Please try again.");
       }
-      toast.success(data?.message || 'Password reset successfully.');
+      toast.success(data?.message || "Password reset successfully.");
     },
     onError: handleApiError,
   });
 };
 
 export const useSignOutAll = () => {
-  const clearSession = useAuthStore(state => state.clearSession);
+  const clearSession = useAuthStore((state) => state.clearSession);
 
   return useMutation<SignoutAllResponse, AppError, void>({
     mutationFn: signOutAll,
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data.success) {
-        return toast.error('Something went wrong', 'Please try again.');
+        return toast.error("Something went wrong", "Please try again.");
       }
       clearSession();
     },
@@ -139,7 +139,7 @@ export const useSignOutAll = () => {
 };
 
 export const useChangePassword = () => {
-  const clearSession = useAuthStore(state => state.clearSession);
+  const clearSession = useAuthStore((state) => state.clearSession);
 
   return useMutation<
     ChangePasswordResponse,
@@ -147,11 +147,11 @@ export const useChangePassword = () => {
     { old_password: string; new_password: string }
   >({
     mutationFn: changePassword,
-    onSuccess: async data => {
+    onSuccess: async (data) => {
       if (!data.success) {
-        return toast.error('Something went wrong', 'Please try again.');
+        return toast.error("Something went wrong", "Please try again.");
       }
-      toast.success(data?.message || 'Password changed successfully.');
+      toast.success(data?.message || "Password changed successfully.");
       await signOutAll().catch(() => null);
       clearSession();
     },
@@ -160,7 +160,7 @@ export const useChangePassword = () => {
 };
 
 export const useVerifyUserCode = () => {
-  const setSession = useAuthStore(state => state.setSession);
+  const setSession = useAuthStore((state) => state.setSession);
 
   return useMutation<
     SignupVerifyResponse,
@@ -168,15 +168,15 @@ export const useVerifyUserCode = () => {
     { email: string; code: string; password?: string }
   >({
     mutationFn: verifyUserCode,
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data.success) {
-        return toast.error('Something went wrong', 'Please try again.');
+        return toast.error("Something went wrong", "Please try again.");
       }
       if (data.data) {
         const { user, ...tokens } = data.data;
         setSession({ tokens, user });
       }
-      toast.success(data?.message || 'User verified successfully.');
+      toast.success(data?.message || "User verified successfully.");
     },
     onError: handleApiError,
   });

@@ -1,114 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import StatCard from "@/components/common/StatCard/StatCard";
-import {
-  MdOutlineArchive,
-  MdOutlinePeopleAlt,
-  MdOutlineFolderSpecial,
-  MdOutlineLink,
-  MdOutlineShield,
-  MdOutlineLock,
-  MdOutlineStorage,
-} from "react-icons/md";
+import { MdOutlineStorage } from "react-icons/md";
 import { IoMdDocument } from "react-icons/io";
 import { FaShieldAlt } from "react-icons/fa";
 import { useDocumentCount } from "@/hooks/useDocuments";
-
-const recentDocs = [
-  {
-    name: "Certificate of Occupancy",
-    category: "Land & Property",
-    badgeClass: "bg-blue-100 text-blue-700",
-    thumbBg: "bg-green-100 text-green-700",
-    date: "Jan 15, 2024",
-    access: "Owner",
-  },
-  {
-    name: "National ID Card",
-    category: "Identity",
-    badgeClass: "bg-purple-100 text-purple-700",
-    thumbBg: "bg-purple-100 text-purple-700",
-    date: "Jan 12, 2024",
-    access: "Link",
-  },
-  {
-    name: "International Passport",
-    category: "Government",
-    badgeClass: "bg-blue-100 text-blue-700",
-    thumbBg: "bg-blue-100 text-blue-700",
-    date: "Jan 10, 2024",
-    access: "Owner",
-  },
-  {
-    name: "Court Judgment Document",
-    category: "Legal",
-    badgeClass: "bg-orange-100 text-orange-700",
-    thumbBg: "bg-orange-100 text-orange-700",
-    date: "Jan 8, 2024",
-    access: "Owner",
-  },
-  {
-    name: "Bank Statement",
-    category: "Financial",
-    badgeClass: "bg-green-100 text-green-700",
-    thumbBg: "bg-green-100 text-green-700",
-    date: "Jan 5, 2024",
-    access: "Owner",
-  },
-];
-
-const quickActions = [
-  {
-    icon: <MdOutlineArchive size={22} />,
-    title: "Document Archive",
-    desc: "Browse all documents",
-    to: "/documents",
-  },
-  {
-    icon: <MdOutlinePeopleAlt size={22} />,
-    title: "Family Access",
-    desc: "Manage sharing",
-    to: "/family",
-  },
-  {
-    icon: <MdOutlineFolderSpecial size={22} />,
-    title: "Family Vaults",
-    desc: "Shared with you",
-    to: "/vaults",
-  },
-  {
-    icon: <MdOutlineLink size={22} />,
-    title: "Create Link",
-    desc: "Secure upload link",
-    to: "/links",
-  },
-];
-
-const securityItems = [
-  {
-    label: "MFA",
-    icon: <MdOutlineLock size={14} />,
-    badge: "Enabled",
-    badgeClass: "bg-green-100 text-green-700",
-  },
-  {
-    label: "Encryption",
-    icon: <MdOutlineShield size={14} />,
-    badge: "Active",
-    badgeClass: "bg-green-100 text-green-700",
-  },
-  {
-    label: "Active Links",
-    icon: <MdOutlineLink size={14} />,
-    badge: "4 links",
-    badgeClass: "bg-blue-100 text-blue-700",
-  },
-  {
-    label: "Family Access",
-    icon: <MdOutlinePeopleAlt size={14} />,
-    badge: "3 members",
-    badgeClass: "bg-blue-100 text-blue-700",
-  },
-];
+import StatCard from "@/components/common/StatCard/StatCard";
+import RecentDocuments from "./components/RecentDocuments";
+import { quickActions, securityItems } from "./homeConstants";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -142,10 +39,14 @@ const Home = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
         <StatCard
           label="Vault Status"
-          indicator={<span className="w-2 h-2 rounded-full bg-green-500 inline-block" />}
+          indicator={
+            <span className="w-2 h-2 rounded-full bg-green-500 inline-block" />
+          }
         >
           <p className="text-sm font-bold text-green-600">Secure</p>
-          <p className="text-xs text-slate-400 mt-0.5">All systems operational</p>
+          <p className="text-xs text-slate-400 mt-0.5">
+            All systems operational
+          </p>
         </StatCard>
 
         <StatCard
@@ -176,7 +77,10 @@ const Home = () => {
         <StatCard label="Storage Used" icon={<MdOutlineStorage size={16} />}>
           <p className="text-sm font-bold text-slate-900">47%</p>
           <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-            <div className="h-full bg-primary rounded-full" style={{ width: "47%" }} />
+            <div
+              className="h-full bg-primary rounded-full"
+              style={{ width: "47%" }}
+            />
           </div>
           <p className="text-xs text-slate-400 mt-1">Family Plan · 5 GB</p>
         </StatCard>
@@ -189,68 +93,7 @@ const Home = () => {
 
       {/* Main two-column layout */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
-        {/* Recent Documents */}
-        <div className="xl:col-span-2 bg-white rounded-2xl border border-slate-100 p-4 md:p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-bold text-slate-900">
-              Recent Documents
-            </h2>
-            <button className="text-xs text-primary hover:underline cursor-pointer">
-              View all →
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-xs text-slate-400 border-b border-slate-100">
-                  <th className="pb-2 text-left font-medium w-8"></th>
-                  <th className="pb-2 text-left font-medium">Document Name</th>
-                  <th className="pb-2 text-left font-medium hidden sm:table-cell">
-                    Category
-                  </th>
-                  <th className="pb-2 text-left font-medium hidden md:table-cell">
-                    Date Added
-                  </th>
-                  <th className="pb-2 text-left font-medium">Access</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentDocs.map((doc) => (
-                  <tr
-                    key={doc.name}
-                    className="border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition-colors"
-                  >
-                    <td className="py-2.5 pr-2">
-                      <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${doc.thumbBg}`}
-                      >
-                        PDF
-                      </div>
-                    </td>
-                    <td className="py-2.5 pr-3 font-medium text-slate-800 text-xs md:text-sm">
-                      {doc.name}
-                    </td>
-                    <td className="py-2.5 pr-3 hidden sm:table-cell">
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${doc.badgeClass}`}
-                      >
-                        {doc.category}
-                      </span>
-                    </td>
-                    <td className="py-2.5 pr-3 text-xs text-slate-400 hidden md:table-cell">
-                      {doc.date}
-                    </td>
-                    <td className="py-2.5">
-                      <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-slate-100 text-slate-600">
-                        {doc.access}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <RecentDocuments />
 
         {/* Right column */}
         <div className="flex flex-col gap-4">

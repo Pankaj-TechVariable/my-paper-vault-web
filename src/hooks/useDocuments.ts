@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getDocuments,
   getDocumentCount,
@@ -10,11 +10,11 @@ import {
   type DocumentCountResponse,
   type RenameDocumentResponse,
   type DeleteDocumentResponse,
-} from '@/api/endpoints/documents';
-import { AppError } from '@/errors/AppError';
-import { handleApiError } from '@/errors/errorHandler';
-import { queryKeys } from '@/api/queryKeys';
-import { toast } from '@/utils/toast';
+} from "@/api/endpoints/documents";
+import { AppError } from "@/errors/AppError";
+import { handleApiError } from "@/errors/errorHandler";
+import { queryKeys } from "@/api/queryKeys";
+import { toast } from "@/lib/toast";
 
 export const useDocumentCount = () => {
   const query = useQuery<DocumentCountResponse, AppError>({
@@ -22,7 +22,7 @@ export const useDocumentCount = () => {
     queryFn: getDocumentCount,
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error) => {
-      if (error.code === 'NETWORK_ERROR') return false;
+      if (error.code === "NETWORK_ERROR") return false;
       if (error.status && error.status < 500) return false;
       return failureCount < 2;
     },
@@ -43,12 +43,12 @@ export const useRenameDocument = () => {
     { id: string; name: string }
   >({
     mutationFn: ({ id, name }) => renameDocument(id, name),
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data.success) {
-        return toast.error('Rename failed', 'Please try again.');
+        return toast.error("Rename failed", "Please try again.");
       }
       queryClient.invalidateQueries({ queryKey: queryKeys.documents.all() });
-      toast.success('Document renamed');
+      toast.success("Document renamed");
     },
     onError: handleApiError,
   });
@@ -58,12 +58,12 @@ export const useDeleteDocument = () => {
   const queryClient = useQueryClient();
   return useMutation<DeleteDocumentResponse, AppError, string>({
     mutationFn: deleteDocument,
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data.success) {
-        return toast.error('Delete failed', 'Please try again.');
+        return toast.error("Delete failed", "Please try again.");
       }
       queryClient.invalidateQueries({ queryKey: queryKeys.documents.all() });
-      toast.success('Document deleted');
+      toast.success("Document deleted");
     },
     onError: handleApiError,
   });
@@ -72,12 +72,12 @@ export const useDeleteDocument = () => {
 export const useDeleteDocuments = () => {
   const queryClient = useQueryClient();
   return useMutation<void, AppError, string[]>({
-    mutationFn: async ids => {
-      await Promise.all(ids.map(id => deleteDocument(id)));
+    mutationFn: async (ids) => {
+      await Promise.all(ids.map((id) => deleteDocument(id)));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.documents.all() });
-      toast.success('Documents deleted');
+      toast.success("Documents deleted");
     },
     onError: handleApiError,
   });
@@ -89,7 +89,7 @@ export const useDocuments = (params?: GetDocumentsParams) => {
     queryFn: () => getDocuments(params),
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error) => {
-      if (error.code === 'NETWORK_ERROR') return false;
+      if (error.code === "NETWORK_ERROR") return false;
       if (error.status && error.status < 500) return false;
       return failureCount < 2;
     },

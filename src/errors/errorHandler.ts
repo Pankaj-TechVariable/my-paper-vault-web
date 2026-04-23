@@ -1,5 +1,5 @@
 import useErrorStore from "@/store/errorStore";
-import { toast } from "@/utils/toast";
+import { toast } from "@/lib/toast";
 import { AppError } from "./AppError";
 
 export const handleError = (error: Error) => {
