@@ -25,7 +25,7 @@ const ConfirmModal = ({
   <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
     <div
       className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-      onClick={onCancel}
+      onClick={loading ? undefined : onCancel}
     />
     <div className="relative bg-white rounded-2xl border border-slate-100 shadow-xl w-full max-w-sm p-6 flex flex-col gap-4">
       <div className="flex items-start justify-between gap-3">

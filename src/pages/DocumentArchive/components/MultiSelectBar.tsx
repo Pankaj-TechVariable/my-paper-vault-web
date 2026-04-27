@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdClose, MdOutlineDownload, MdOutlineDelete } from "react-icons/md";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import ActionIconButton from "./ActionIconButton";
@@ -8,6 +8,7 @@ interface MultiSelectBarProps {
   onClearAll: () => void;
   onDownload: () => void;
   onDelete: () => void;
+  deleteLoading?: boolean;
   variant: "panel" | "bar";
 }
 
@@ -16,14 +17,20 @@ const MultiSelectBar = ({
   onClearAll,
   onDownload,
   onDelete,
+  deleteLoading,
   variant,
 }: MultiSelectBarProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const wasDeleting = useRef(false);
 
-  const handleDeleteConfirmed = () => {
-    setConfirmDelete(false);
-    onDelete();
-  };
+  useEffect(() => {
+    if (deleteLoading) {
+      wasDeleting.current = true;
+    } else if (wasDeleting.current) {
+      wasDeleting.current = false;
+      setConfirmDelete(false);
+    }
+  }, [deleteLoading]);
 
   if (variant === "bar") {
     return (
@@ -60,8 +67,9 @@ const MultiSelectBar = ({
             title={`Delete ${count} item${count !== 1 ? "s" : ""}?`}
             message="These documents will be permanently deleted and cannot be recovered."
             confirmLabel="Delete"
-            onConfirm={handleDeleteConfirmed}
+            onConfirm={onDelete}
             onCancel={() => setConfirmDelete(false)}
+            loading={deleteLoading}
             destructive
           />
         )}
@@ -103,7 +111,7 @@ const MultiSelectBar = ({
           title={`Delete ${count} item${count !== 1 ? "s" : ""}?`}
           message="These documents will be permanently deleted and cannot be recovered."
           confirmLabel="Delete"
-          onConfirm={handleDeleteConfirmed}
+          onConfirm={onDelete}
           onCancel={() => setConfirmDelete(false)}
           destructive
         />

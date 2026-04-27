@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
-import { useDocuments } from "@/hooks/useDocuments";
+import { useDocuments, useRenameDocument, useDeleteDocument, useDeleteDocuments } from "@/hooks/useDocuments";
 import { useDirectories } from "@/hooks/useDirectories";
 import useDebounce from "@/hooks/useDebounce";
 import DocumentItem from "@/components/common/DocumentItem/DocumentItem";
@@ -15,8 +15,11 @@ import type { Document } from "@/api/endpoints/documents";
 const DocumentArchive = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDirectoryId, setSelectedDirectoryId] = useState<string | null>(null);
-  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
+  const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
+  const rename = useRenameDocument();
+  const deleteDoc = useDeleteDocument();
+  const deleteDocs = useDeleteDocuments();
 
   const debouncedSearch = useDebounce(searchQuery);
   const isMultiSelect = checkedIds.size > 0;
@@ -31,10 +34,13 @@ const DocumentArchive = () => {
   const dirMap = new Map((dirsData?.data ?? []).map((d) => [d.id, d]));
   const documents = docsData?.data ?? [];
 
+  // Always derive selectedDoc from fresh query data — never stale
+  const selectedDoc = documents.find((d) => d.id === selectedDocId) ?? null;
+
   const toggleCheck = (doc: Document) => {
     setCheckedIds((prev) => {
       const next = new Set(prev);
-      next.has(doc.id) ? next.delete(doc.id) : next.add(doc.id);
+      if (next.has(doc.id)) { next.delete(doc.id); } else { next.add(doc.id); }
       return next;
     });
   };
@@ -45,7 +51,7 @@ const DocumentArchive = () => {
     if (isMultiSelect) {
       toggleCheck(doc);
     } else {
-      setSelectedDoc((prev) => (prev?.id === doc.id ? null : doc));
+      setSelectedDocId((prev) => (prev === doc.id ? null : doc.id));
     }
   };
 
@@ -53,7 +59,8 @@ const DocumentArchive = () => {
     count: checkedIds.size,
     onClearAll: clearAll,
     onDownload: () => console.log("download", [...checkedIds]),
-    onDelete: () => console.log("delete", [...checkedIds]),
+    onDelete: () => deleteDocs.mutate([...checkedIds], { onSuccess: clearAll }),
+    deleteLoading: deleteDocs.isPending,
   };
 
   const detailProps =
@@ -61,10 +68,16 @@ const DocumentArchive = () => {
       ? {
           document: selectedDoc,
           directory: dirMap.get(selectedDoc.directory_id),
-          onClose: () => setSelectedDoc(null),
-          onRename: (doc: Document, newName: string) =>
-            console.log("rename", doc, newName),
-          onDelete: (doc: Document) => console.log("delete", doc),
+          onClose: () => setSelectedDocId(null),
+          onRename: (doc: Document, newName: string, onSuccess: () => void) =>
+            rename.mutate(
+              { id: doc.id, name: newName },
+              { onSuccess: (data) => { if (data.success) onSuccess(); } },
+            ),
+          renameLoading: rename.isPending,
+          onDelete: (doc: Document, onSuccess: () => void) =>
+            deleteDoc.mutate(doc.id, { onSuccess: (data) => { if (data.success) { onSuccess(); setSelectedDocId(null); } } }),
+          deleteLoading: deleteDoc.isPending,
         }
       : null;
 
@@ -93,7 +106,7 @@ const DocumentArchive = () => {
           isLoading={dirsLoading}
           onSelect={(id) => {
             setSelectedDirectoryId(id);
-            setSelectedDoc(null);
+            setSelectedDocId(null);
           }}
         />
       </div>
@@ -133,7 +146,7 @@ const DocumentArchive = () => {
                   directory={dirMap.get(doc.directory_id)}
                   onClick={handleItemClick}
                   onCheckToggle={toggleCheck}
-                  isSelected={!isMultiSelect && selectedDoc?.id === doc.id}
+                  isSelected={!isMultiSelect && selectedDocId === doc.id}
                   showCheckbox={isMultiSelect}
                   isChecked={checkedIds.has(doc.id)}
                 />
@@ -147,7 +160,7 @@ const DocumentArchive = () => {
       <div className="lg:hidden">
         <BottomSheet
           isOpen={!isMultiSelect && !!selectedDoc}
-          onClose={() => setSelectedDoc(null)}
+          onClose={() => setSelectedDocId(null)}
         >
           {detailProps && <DocumentDetail {...detailProps} />}
         </BottomSheet>

@@ -1,5 +1,5 @@
 const SkeletonItem = () => (
-  <div className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100">
+  <div className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 bg-white">
     <div className="w-11 h-11 shrink-0 rounded-xl bg-slate-100 animate-pulse" />
     <div className="flex-1 space-y-2">
       <div className="h-3.5 w-48 bg-slate-100 rounded animate-pulse" />

@@ -29,7 +29,7 @@ const TextInput: React.FC<TextInputProps> = ({
         </label>
       )}
       <div
-        className={`mb-1 h-10 flex flex-row items-center rounded-lg border px-4 transition-colors ${
+        className={`mb-1 h-10 flex flex-row items-center rounded-lg border px-4 transition-colors bg-white ${
           error ? "border-red-500" : "border-slate-200"
         } ${className ?? ""}`}
       >

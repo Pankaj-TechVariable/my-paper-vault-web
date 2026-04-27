@@ -23,8 +23,10 @@ interface DocumentDetailProps {
   document: Document;
   directory?: Directory;
   onClose: () => void;
-  onRename: (doc: Document, newName: string) => void;
-  onDelete: (doc: Document) => void;
+  onRename: (doc: Document, newName: string, onSuccess: () => void) => void;
+  onDelete: (doc: Document, onSuccess: () => void) => void;
+  renameLoading?: boolean;
+  deleteLoading?: boolean;
 }
 
 const DocumentDetail = ({
@@ -33,6 +35,8 @@ const DocumentDetail = ({
   onClose,
   onRename,
   onDelete,
+  renameLoading,
+  deleteLoading,
 }: DocumentDetailProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmRename, setConfirmRename] = useState(false);
@@ -124,10 +128,10 @@ const DocumentDetail = ({
         <RenameDocumentModal
           document={document}
           onSave={(doc, newName) => {
-            setConfirmRename(false);
-            onRename(doc, newName);
+            onRename(doc, newName, () => setConfirmRename(false));
           }}
           onCancel={() => setConfirmRename(false)}
+          loading={renameLoading}
         />
       )}
 
@@ -136,11 +140,9 @@ const DocumentDetail = ({
           title="Delete document?"
           message={`"${document.name}" will be permanently deleted and cannot be recovered.`}
           confirmLabel="Delete"
-          onConfirm={() => {
-            setConfirmDelete(false);
-            onDelete(document);
-          }}
+          onConfirm={() => onDelete(document, () => setConfirmDelete(false))}
           onCancel={() => setConfirmDelete(false)}
+          loading={deleteLoading}
           destructive
         />
       )}
