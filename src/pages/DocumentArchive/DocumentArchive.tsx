@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
-import { useDocuments, useRenameDocument, useDeleteDocument, useDeleteDocuments } from "@/hooks/useDocuments";
+import { useDocuments, useRenameDocument, useDeleteDocument, useDeleteDocuments, useDownloadDocuments } from "@/hooks/useDocuments";
 import { useDirectories } from "@/hooks/useDirectories";
 import useDebounce from "@/hooks/useDebounce";
 import DocumentItem from "@/components/common/DocumentItem/DocumentItem";
@@ -20,6 +20,7 @@ const DocumentArchive = () => {
   const rename = useRenameDocument();
   const deleteDoc = useDeleteDocument();
   const deleteDocs = useDeleteDocuments();
+  const downloadDocs = useDownloadDocuments();
 
   const debouncedSearch = useDebounce(searchQuery);
   const isMultiSelect = checkedIds.size > 0;
@@ -58,7 +59,10 @@ const DocumentArchive = () => {
   const multiSelectProps = {
     count: checkedIds.size,
     onClearAll: clearAll,
-    onDownload: () => console.log("download", [...checkedIds]),
+    onDownload: () =>
+      downloadDocs.mutate(
+        documents.filter((d) => checkedIds.has(d.id)).map(({ id, name }) => ({ id, name })),
+      ),
     onDelete: () => deleteDocs.mutate([...checkedIds], { onSuccess: clearAll }),
     deleteLoading: deleteDocs.isPending,
   };

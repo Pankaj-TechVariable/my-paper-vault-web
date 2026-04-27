@@ -16,6 +16,8 @@ import { getCategoryStyle } from "@/constants/categoryStyles";
 import { getMimeIcon, formatFileSize } from "@/utils/document.utils";
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import RenameDocumentModal from "./RenameDocumentModal";
+import { useDownloadDocument, useViewDocument } from "@/hooks/useDocuments";
+import DocumentViewer from "@/components/common/DocumentViewer/DocumentViewer";
 import DetailRow from "./DetailRow";
 import ActionIconButton from "./ActionIconButton";
 
@@ -40,6 +42,9 @@ const DocumentDetail = ({
 }: DocumentDetailProps) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmRename, setConfirmRename] = useState(false);
+  const [viewUrl, setViewUrl] = useState<string | null>(null);
+  const download = useDownloadDocument();
+  const view = useViewDocument();
   const style = getCategoryStyle(directory?.category?.type ?? "");
 
   const date = new Date(document.created_at).toLocaleDateString("en-US", {
@@ -103,12 +108,21 @@ const DocumentDetail = ({
           <ActionIconButton
             icon={<MdOutlineVisibility size={18} />}
             label="View"
-            onClick={() => console.log("view", document)}
+            onClick={() =>
+              view.mutate(document.id, {
+                onSuccess: (data) => {
+                  if (data.success && data.data?.download_url)
+                    setViewUrl(data.data.download_url);
+                },
+              })
+            }
+            loading={view.isPending}
           />
           <ActionIconButton
             icon={<MdOutlineDownload size={18} />}
             label="Download"
-            onClick={() => console.log("download", document)}
+            onClick={() => download.mutate({ id: document.id, name: document.name })}
+            loading={download.isPending}
           />
           <ActionIconButton
             icon={<MdOutlineEdit size={18} />}
@@ -123,6 +137,15 @@ const DocumentDetail = ({
           />
         </div>
       </div>
+
+      {viewUrl && (
+        <DocumentViewer
+          url={viewUrl}
+          filename={document.name}
+          mimeType={document.mime_type}
+          onClose={() => setViewUrl(null)}
+        />
+      )}
 
       {confirmRename && (
         <RenameDocumentModal
