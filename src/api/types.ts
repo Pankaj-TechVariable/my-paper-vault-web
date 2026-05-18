@@ -261,7 +261,7 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        refresh_token: string;
+                        refresh_token?: string;
                     };
                 };
             };
@@ -367,7 +367,7 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        refresh_token: string;
+                        refresh_token?: string;
                     };
                 };
             };
@@ -748,7 +748,7 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
-                    type?: "PROPERTY" | "GOVERNMENT" | "IDENTY" | "LEAGAL" | "FINANCIAL" | "BUSINESS" | "RECEIPT" | "OTHER";
+                    type?: string;
                 };
                 header?: never;
                 path?: never;
@@ -810,8 +810,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         categories: {
-                            /** @enum {string} */
-                            type: "PROPERTY" | "GOVERNMENT" | "IDENTY" | "LEAGAL" | "FINANCIAL" | "BUSINESS" | "RECEIPT" | "OTHER";
+                            type: string;
                             name: string;
                         }[];
                     };
@@ -875,8 +874,7 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
-                        /** @enum {string} */
-                        type?: "PROPERTY" | "GOVERNMENT" | "IDENTY" | "LEAGAL" | "FINANCIAL" | "BUSINESS" | "RECEIPT" | "OTHER";
+                        type?: string;
                         name?: string;
                     };
                 };
@@ -1514,6 +1512,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users/profile-picture/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a presigned S3 URL to view any accessible profile picture by file key */
+        get: {
+            parameters: {
+                query: {
+                    file_key: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description ProfilePictureDownloadByKeyResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProfilePictureDownloadByKeyResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/profile-picture": {
         parameters: {
             query?: never;
@@ -1655,6 +1705,1474 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/family-members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all accepted family connections */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetFamilyMembersResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetFamilyMembersResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/family-members/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get pending family invites. direction=received (default) or direction=sent */
+        get: {
+            parameters: {
+                query?: {
+                    direction?: "received" | "sent";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetPendingInvitesResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetPendingInvitesResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/family-members/invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send a family invite to another user by email */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: email */
+                        email: string;
+                        relation?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description SendFamilyInviteResponse */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SendFamilyInviteResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/family-members/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept a pending family invite */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description AcceptFamilyInviteResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AcceptFamilyInviteResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/family-members/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject a pending family invite */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description RejectFamilyInviteResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RejectFamilyInviteResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/family-members/{id}/relation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Set or update your relation label for a family connection */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        relation: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description SetRelationLabelResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SetRelationLabelResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/family-members/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a family connection (either party can remove) */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description RemoveFamilyConnectionResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RemoveFamilyConnectionResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user-directories/access-grants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all directory access granted by the authenticated user to their family members */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetGrantedAccessResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetGrantedAccessResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user-directories/my-access": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all family members who granted me directory access, with their directories */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetMyAccessResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetMyAccessResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user-directories/{directoryId}/access-grants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all members of a directory */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    directoryId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetDirectoryMembersResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetDirectoryMembersResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Add a member to a directory (role defaults to VIEW) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    directoryId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        member_id: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description AddDirectoryMemberResponse */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AddDirectoryMemberResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/user-directories/{directoryId}/access-grants/{memberId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a member from a directory */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    directoryId: string;
+                    memberId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description RemoveDirectoryMemberResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RemoveDirectoryMemberResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Update upload/download permissions for a directory member */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    directoryId: string;
+                    memberId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        can_upload?: boolean;
+                        can_download?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description UpdateDirectoryMemberResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["UpdateDirectoryMemberResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/subscriptions/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all subscription plans */
+        get: {
+            parameters: {
+                query?: {
+                    is_active?: "true" | "false";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetPlansResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetPlansResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a new subscription plan */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        name: string;
+                        monthly_price: number;
+                        yearly_price: number;
+                        max_storage_bytes: number;
+                        /** @default true */
+                        allow_family_connections?: boolean;
+                        /** @default null */
+                        max_family_connections?: number | null;
+                        /** @default null */
+                        max_directory_members?: number | null;
+                        /** @default null */
+                        max_upload_members?: number | null;
+                        /** @default null */
+                        max_download_members?: number | null;
+                        /**
+                         * @default TOTAL
+                         * @enum {string}
+                         */
+                        download_limit_scope?: "PER_DIRECTORY" | "TOTAL";
+                        /** @default null */
+                        trial_days?: number | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description CreatePlanResponse */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CreatePlanResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/subscriptions/plans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a subscription plan */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        name?: string;
+                        monthly_price?: number;
+                        yearly_price?: number;
+                        max_storage_bytes?: number;
+                        allow_family_connections?: boolean;
+                        max_family_connections?: number | null;
+                        max_directory_members?: number | null;
+                        max_upload_members?: number | null;
+                        max_download_members?: number | null;
+                        /** @enum {string} */
+                        download_limit_scope?: "PER_DIRECTORY" | "TOTAL";
+                        trial_days?: number | null;
+                        is_active?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description UpdatePlanResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["UpdatePlanResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/subscriptions/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get my current subscription and storage usage */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetMySubscriptionResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetMySubscriptionResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** Cancel your subscription */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description CancelSubscriptionResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CancelSubscriptionResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Upgrade or downgrade your subscription plan */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        plan_id: string;
+                        /** @enum {string} */
+                        billing_cycle?: "MONTHLY" | "QUARTERLY" | "YEARLY";
+                    };
+                };
+            };
+            responses: {
+                /** @description UpdateSubscriptionResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["UpdateSubscriptionResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/subscriptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Subscribe to a plan */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        plan_id: string;
+                        /**
+                         * @default MONTHLY
+                         * @enum {string}
+                         */
+                        billing_cycle?: "MONTHLY" | "QUARTERLY" | "YEARLY";
+                    };
+                };
+            };
+            responses: {
+                /** @description SubscribeResponse */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SubscribeResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/subscriptions/trial": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate a free trial for a plan */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        plan_id: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description ActivateTrialResponse */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ActivateTrialResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/upload-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List upload links. Filter by ?active=true or ?active=false */
+        get: {
+            parameters: {
+                query?: {
+                    active?: "true" | "false";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetLinksResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetLinksResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a secure upload link for a directory */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        directory_id: string;
+                        /** Format: date-time */
+                        expires_at: string;
+                        max_file_count: number;
+                        max_file_size: number;
+                        pin?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description CreateLinkResponse */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CreateLinkResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/upload-links/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a single upload link with its audit log */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description GetLinkResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetLinkResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update an upload link (expiry, limits, PIN, or deactivate) */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: date-time */
+                        expires_at?: string;
+                        max_file_count?: number;
+                        max_file_size?: number;
+                        pin?: string | null;
+                        is_active?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description UpdateLinkResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["UpdateLinkResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/upload-links/public/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get public info about an upload link (no auth required) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description PublicLinkInfoResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PublicLinkInfoResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/upload-links/public/{token}/presigned-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get a presigned S3 URL to upload a file via a share link (no auth required) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        file_name: string;
+                        mime_type: string;
+                        file_size: number;
+                        pin?: string;
+                        uploader_name?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description PublicPresignedUrlResponse */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PublicPresignedUrlResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/upload-links/public/{token}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm a completed S3 upload via a share link (no auth required) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        file_key: string;
+                        file_name: string;
+                        mime_type: string;
+                        file_size: number;
+                        pin?: string;
+                        uploader_name?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description PublicConfirmUploadResponse */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PublicConfirmUploadResponse"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: false;
+                            message: string;
+                            errors?: unknown;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -1809,9 +3327,9 @@ export interface components {
             message: string;
             data: {
                 id: string;
-                /** @enum {string} */
-                type: "PROPERTY" | "GOVERNMENT" | "IDENTY" | "LEAGAL" | "FINANCIAL" | "BUSINESS" | "RECEIPT" | "OTHER";
+                type: string;
                 name: string;
+                is_active: boolean;
                 /** Format: date-time */
                 created_at: string;
                 /** Format: date-time */
@@ -1823,9 +3341,9 @@ export interface components {
             message: string;
             data: {
                 id: string;
-                /** @enum {string} */
-                type: "PROPERTY" | "GOVERNMENT" | "IDENTY" | "LEAGAL" | "FINANCIAL" | "BUSINESS" | "RECEIPT" | "OTHER";
+                type: string;
                 name: string;
+                is_active: boolean;
                 /** Format: date-time */
                 created_at: string;
                 /** Format: date-time */
@@ -1837,9 +3355,9 @@ export interface components {
             message: string;
             data: {
                 id: string;
-                /** @enum {string} */
-                type: "PROPERTY" | "GOVERNMENT" | "IDENTY" | "LEAGAL" | "FINANCIAL" | "BUSINESS" | "RECEIPT" | "OTHER";
+                type: string;
                 name: string;
+                is_active: boolean;
                 /** Format: date-time */
                 created_at: string;
                 /** Format: date-time */
@@ -1988,6 +3506,14 @@ export interface components {
                 profile_picture_mime_type: string;
             };
         };
+        ProfilePictureDownloadByKeyResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                download_url: string;
+                expires_in: number;
+            };
+        };
         ProfilePictureDownloadUrlResponse: {
             success: boolean;
             message: string;
@@ -2011,6 +3537,835 @@ export interface components {
                 gender: string | null;
                 phone_number: string | null;
                 age: number | null;
+            };
+        };
+        GetFamilyMembersResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                requester_id: string;
+                recipient_id: string;
+                /** @enum {string} */
+                status: "PENDING" | "ACCEPTED" | "REJECTED";
+                requester_relation: string | null;
+                recipient_relation: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                requester: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+                recipient: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+            }[];
+        };
+        GetPendingInvitesResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                requester_id: string;
+                recipient_id: string;
+                /** @enum {string} */
+                status: "PENDING" | "ACCEPTED" | "REJECTED";
+                requester_relation: string | null;
+                recipient_relation: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                requester: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+                recipient: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+            }[];
+        };
+        SendFamilyInviteResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                requester_id: string;
+                recipient_id: string;
+                /** @enum {string} */
+                status: "PENDING" | "ACCEPTED" | "REJECTED";
+                requester_relation: string | null;
+                recipient_relation: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                requester: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+                recipient: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+            };
+        };
+        AcceptFamilyInviteResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                requester_id: string;
+                recipient_id: string;
+                /** @enum {string} */
+                status: "PENDING" | "ACCEPTED" | "REJECTED";
+                requester_relation: string | null;
+                recipient_relation: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                requester: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+                recipient: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+            };
+        };
+        RejectFamilyInviteResponse: {
+            success: boolean;
+            message: string;
+            data: unknown;
+        };
+        SetRelationLabelResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                requester_id: string;
+                recipient_id: string;
+                /** @enum {string} */
+                status: "PENDING" | "ACCEPTED" | "REJECTED";
+                requester_relation: string | null;
+                recipient_relation: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                requester: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+                recipient: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    gender: string | null;
+                    phone_number: string | null;
+                    age: number | null;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+            };
+        };
+        RemoveFamilyConnectionResponse: {
+            success: boolean;
+            message: string;
+            data: unknown;
+        };
+        GetGrantedAccessResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                name: string;
+                email: string;
+                profile_picture_key: string | null;
+                profile_picture_mime_type: string | null;
+                directories: {
+                    id: string;
+                    name: string;
+                    is_active: boolean;
+                    can_view: boolean;
+                    can_upload: boolean;
+                    can_download: boolean;
+                    document_count: number;
+                    category: {
+                        id: string;
+                        type: string;
+                        name: string;
+                    };
+                }[];
+            }[];
+        };
+        GetMyAccessResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                name: string;
+                email: string;
+                profile_picture_key: string | null;
+                profile_picture_mime_type: string | null;
+                directories: {
+                    id: string;
+                    name: string;
+                    is_active: boolean;
+                    can_view: boolean;
+                    can_upload: boolean;
+                    can_download: boolean;
+                    document_count: number;
+                    category: {
+                        id: string;
+                        type: string;
+                        name: string;
+                    };
+                }[];
+            }[];
+        };
+        GetDirectoryMembersResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                directory_id: string;
+                user_id: string;
+                can_view: boolean;
+                can_upload: boolean;
+                can_download: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                user: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+            }[];
+        };
+        AddDirectoryMemberResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                directory_id: string;
+                user_id: string;
+                can_view: boolean;
+                can_upload: boolean;
+                can_download: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                user: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+            };
+        };
+        UpdateDirectoryMemberResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                directory_id: string;
+                user_id: string;
+                can_view: boolean;
+                can_upload: boolean;
+                can_download: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                user: {
+                    id: string;
+                    email: string;
+                    name: string;
+                    profile_picture_key: string | null;
+                    profile_picture_mime_type: string | null;
+                };
+            };
+        };
+        RemoveDirectoryMemberResponse: {
+            success: boolean;
+            message: string;
+            data: unknown;
+        };
+        GetPlansResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                name: string;
+                monthly_price: number;
+                yearly_price: number;
+                max_storage_bytes: string;
+                allow_family_connections: boolean;
+                max_family_connections: number | null;
+                max_directory_members: number | null;
+                max_upload_members: number | null;
+                max_download_members: number | null;
+                /** @enum {string} */
+                download_limit_scope: "PER_DIRECTORY" | "TOTAL";
+                trial_days: number | null;
+                is_active: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+            }[];
+        };
+        CreatePlanResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                name: string;
+                monthly_price: number;
+                yearly_price: number;
+                max_storage_bytes: string;
+                allow_family_connections: boolean;
+                max_family_connections: number | null;
+                max_directory_members: number | null;
+                max_upload_members: number | null;
+                max_download_members: number | null;
+                /** @enum {string} */
+                download_limit_scope: "PER_DIRECTORY" | "TOTAL";
+                trial_days: number | null;
+                is_active: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+            };
+        };
+        UpdatePlanResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                name: string;
+                monthly_price: number;
+                yearly_price: number;
+                max_storage_bytes: string;
+                allow_family_connections: boolean;
+                max_family_connections: number | null;
+                max_directory_members: number | null;
+                max_upload_members: number | null;
+                max_download_members: number | null;
+                /** @enum {string} */
+                download_limit_scope: "PER_DIRECTORY" | "TOTAL";
+                trial_days: number | null;
+                is_active: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+            };
+        };
+        GetMySubscriptionResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                subscription: {
+                    id: string;
+                    user_id: string;
+                    subscription_plan_id: string;
+                    /** @enum {string} */
+                    billing_cycle: "MONTHLY" | "QUARTERLY" | "YEARLY";
+                    price_at_purchase: number;
+                    /** @enum {string} */
+                    status: "ACTIVE" | "GRACE" | "RESTRICTED" | "ARCHIVED" | "CANCELLED";
+                    storage_used_bytes: string;
+                    /** Format: date-time */
+                    start_date: string;
+                    /** Format: date-time */
+                    end_date: string;
+                    /** Format: date-time */
+                    trial_ends_at: string | null;
+                    /** Format: date-time */
+                    grace_period_started_at: string | null;
+                    /** Format: date-time */
+                    restricted_at: string | null;
+                    /** Format: date-time */
+                    archived_at: string | null;
+                    /** Format: date-time */
+                    created_at: string;
+                    /** Format: date-time */
+                    updated_at: string;
+                    subscriptionPlan: {
+                        id: string;
+                        name: string;
+                        monthly_price: number;
+                        yearly_price: number;
+                        max_storage_bytes: string;
+                        allow_family_connections: boolean;
+                        max_family_connections: number | null;
+                        max_directory_members: number | null;
+                        max_upload_members: number | null;
+                        max_download_members: number | null;
+                        /** @enum {string} */
+                        download_limit_scope: "PER_DIRECTORY" | "TOTAL";
+                        trial_days: number | null;
+                        is_active: boolean;
+                        /** Format: date-time */
+                        created_at: string;
+                        /** Format: date-time */
+                        updated_at: string;
+                    };
+                };
+                storage: {
+                    used_bytes: string;
+                    total_bytes: string;
+                    used_percent: number;
+                    /** @enum {string} */
+                    threshold: "OK" | "WARNING_80" | "WARNING_95" | "BLOCKED";
+                };
+            };
+        };
+        SubscribeResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                user_id: string;
+                subscription_plan_id: string;
+                /** @enum {string} */
+                billing_cycle: "MONTHLY" | "QUARTERLY" | "YEARLY";
+                price_at_purchase: number;
+                /** @enum {string} */
+                status: "ACTIVE" | "GRACE" | "RESTRICTED" | "ARCHIVED" | "CANCELLED";
+                storage_used_bytes: string;
+                /** Format: date-time */
+                start_date: string;
+                /** Format: date-time */
+                end_date: string;
+                /** Format: date-time */
+                trial_ends_at: string | null;
+                /** Format: date-time */
+                grace_period_started_at: string | null;
+                /** Format: date-time */
+                restricted_at: string | null;
+                /** Format: date-time */
+                archived_at: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                subscriptionPlan: {
+                    id: string;
+                    name: string;
+                    monthly_price: number;
+                    yearly_price: number;
+                    max_storage_bytes: string;
+                    allow_family_connections: boolean;
+                    max_family_connections: number | null;
+                    max_directory_members: number | null;
+                    max_upload_members: number | null;
+                    max_download_members: number | null;
+                    /** @enum {string} */
+                    download_limit_scope: "PER_DIRECTORY" | "TOTAL";
+                    trial_days: number | null;
+                    is_active: boolean;
+                    /** Format: date-time */
+                    created_at: string;
+                    /** Format: date-time */
+                    updated_at: string;
+                };
+            };
+        };
+        UpdateSubscriptionResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                user_id: string;
+                subscription_plan_id: string;
+                /** @enum {string} */
+                billing_cycle: "MONTHLY" | "QUARTERLY" | "YEARLY";
+                price_at_purchase: number;
+                /** @enum {string} */
+                status: "ACTIVE" | "GRACE" | "RESTRICTED" | "ARCHIVED" | "CANCELLED";
+                storage_used_bytes: string;
+                /** Format: date-time */
+                start_date: string;
+                /** Format: date-time */
+                end_date: string;
+                /** Format: date-time */
+                trial_ends_at: string | null;
+                /** Format: date-time */
+                grace_period_started_at: string | null;
+                /** Format: date-time */
+                restricted_at: string | null;
+                /** Format: date-time */
+                archived_at: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                subscriptionPlan: {
+                    id: string;
+                    name: string;
+                    monthly_price: number;
+                    yearly_price: number;
+                    max_storage_bytes: string;
+                    allow_family_connections: boolean;
+                    max_family_connections: number | null;
+                    max_directory_members: number | null;
+                    max_upload_members: number | null;
+                    max_download_members: number | null;
+                    /** @enum {string} */
+                    download_limit_scope: "PER_DIRECTORY" | "TOTAL";
+                    trial_days: number | null;
+                    is_active: boolean;
+                    /** Format: date-time */
+                    created_at: string;
+                    /** Format: date-time */
+                    updated_at: string;
+                };
+            };
+        };
+        CancelSubscriptionResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                user_id: string;
+                subscription_plan_id: string;
+                /** @enum {string} */
+                billing_cycle: "MONTHLY" | "QUARTERLY" | "YEARLY";
+                price_at_purchase: number;
+                /** @enum {string} */
+                status: "ACTIVE" | "GRACE" | "RESTRICTED" | "ARCHIVED" | "CANCELLED";
+                storage_used_bytes: string;
+                /** Format: date-time */
+                start_date: string;
+                /** Format: date-time */
+                end_date: string;
+                /** Format: date-time */
+                trial_ends_at: string | null;
+                /** Format: date-time */
+                grace_period_started_at: string | null;
+                /** Format: date-time */
+                restricted_at: string | null;
+                /** Format: date-time */
+                archived_at: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                subscriptionPlan: {
+                    id: string;
+                    name: string;
+                    monthly_price: number;
+                    yearly_price: number;
+                    max_storage_bytes: string;
+                    allow_family_connections: boolean;
+                    max_family_connections: number | null;
+                    max_directory_members: number | null;
+                    max_upload_members: number | null;
+                    max_download_members: number | null;
+                    /** @enum {string} */
+                    download_limit_scope: "PER_DIRECTORY" | "TOTAL";
+                    trial_days: number | null;
+                    is_active: boolean;
+                    /** Format: date-time */
+                    created_at: string;
+                    /** Format: date-time */
+                    updated_at: string;
+                };
+            };
+        };
+        ActivateTrialResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                user_id: string;
+                subscription_plan_id: string;
+                /** @enum {string} */
+                billing_cycle: "MONTHLY" | "QUARTERLY" | "YEARLY";
+                price_at_purchase: number;
+                /** @enum {string} */
+                status: "ACTIVE" | "GRACE" | "RESTRICTED" | "ARCHIVED" | "CANCELLED";
+                storage_used_bytes: string;
+                /** Format: date-time */
+                start_date: string;
+                /** Format: date-time */
+                end_date: string;
+                /** Format: date-time */
+                trial_ends_at: string | null;
+                /** Format: date-time */
+                grace_period_started_at: string | null;
+                /** Format: date-time */
+                restricted_at: string | null;
+                /** Format: date-time */
+                archived_at: string | null;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                subscriptionPlan: {
+                    id: string;
+                    name: string;
+                    monthly_price: number;
+                    yearly_price: number;
+                    max_storage_bytes: string;
+                    allow_family_connections: boolean;
+                    max_family_connections: number | null;
+                    max_directory_members: number | null;
+                    max_upload_members: number | null;
+                    max_download_members: number | null;
+                    /** @enum {string} */
+                    download_limit_scope: "PER_DIRECTORY" | "TOTAL";
+                    trial_days: number | null;
+                    is_active: boolean;
+                    /** Format: date-time */
+                    created_at: string;
+                    /** Format: date-time */
+                    updated_at: string;
+                };
+            };
+        };
+        CreateLinkResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                owner_id: string;
+                directory_id: string;
+                token: string;
+                share_url: string;
+                /** Format: date-time */
+                expires_at: string;
+                max_file_count: number;
+                max_file_size: number;
+                is_pin_protected: boolean;
+                uploaded_count: number;
+                is_active: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                directory: {
+                    id: string;
+                    name: string;
+                    category: {
+                        id: string;
+                        type: string;
+                        name: string;
+                    };
+                };
+            };
+        };
+        GetLinksResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                owner_id: string;
+                directory_id: string;
+                token: string;
+                share_url: string;
+                /** Format: date-time */
+                expires_at: string;
+                max_file_count: number;
+                max_file_size: number;
+                is_pin_protected: boolean;
+                uploaded_count: number;
+                is_active: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                directory: {
+                    id: string;
+                    name: string;
+                    category: {
+                        id: string;
+                        type: string;
+                        name: string;
+                    };
+                };
+            }[];
+        };
+        GetLinkResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                owner_id: string;
+                directory_id: string;
+                token: string;
+                share_url: string;
+                /** Format: date-time */
+                expires_at: string;
+                max_file_count: number;
+                max_file_size: number;
+                is_pin_protected: boolean;
+                uploaded_count: number;
+                is_active: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                directory: {
+                    id: string;
+                    name: string;
+                    category: {
+                        id: string;
+                        type: string;
+                        name: string;
+                    };
+                };
+                auditLogs: {
+                    id: string;
+                    upload_link_id: string;
+                    document_id: string | null;
+                    uploader_ip: string | null;
+                    uploader_user_agent: string | null;
+                    uploader_name: string | null;
+                    /** Format: date-time */
+                    created_at: string;
+                    /** Format: date-time */
+                    updated_at: string;
+                }[];
+            };
+        };
+        UpdateLinkResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                owner_id: string;
+                directory_id: string;
+                token: string;
+                share_url: string;
+                /** Format: date-time */
+                expires_at: string;
+                max_file_count: number;
+                max_file_size: number;
+                is_pin_protected: boolean;
+                uploaded_count: number;
+                is_active: boolean;
+                /** Format: date-time */
+                created_at: string;
+                /** Format: date-time */
+                updated_at: string;
+                directory: {
+                    id: string;
+                    name: string;
+                    category: {
+                        id: string;
+                        type: string;
+                        name: string;
+                    };
+                };
+            };
+        };
+        PublicLinkInfoResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                directory_name: string;
+                owner_name: string;
+                /** Format: date-time */
+                expires_at: string;
+                max_file_count: number;
+                max_file_size: number;
+                uploaded_count: number;
+                is_pin_protected: boolean;
+            };
+        };
+        PublicPresignedUrlResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                upload_url: string;
+                file_key: string;
+                expires_in: number;
+                required_headers: {
+                    [key: string]: string;
+                };
+            };
+        };
+        PublicConfirmUploadResponse: {
+            success: boolean;
+            message: string;
+            data: {
+                id: string;
+                name: string;
+                mime_type: string;
+                file_size: number;
+                /** Format: date-time */
+                created_at: string;
             };
         };
     };

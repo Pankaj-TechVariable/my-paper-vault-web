@@ -8,6 +8,7 @@ const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
 const Login = lazy(() => import("@/pages/Login"));
 const DocumentArchive = lazy(() => import("@/pages/DocumentArchive"));
+const PublicUpload = lazy(() => import("@/pages/PublicUpload"));
 
 const PageLoader = () => (
   <div className="flex-1 flex items-center justify-center min-h-64">
@@ -46,6 +47,9 @@ function AppRouter() {
           </Route>
           <Route path="/login" element={<Login />} />
         </Route>
+
+        {/* Fully public — accessible regardless of auth state */}
+        <Route path="/upload/:token" element={<PublicUpload />} />
 
         {/* Private — redirect to /login if not logged in */}
         <Route element={<ProtectedRoute />}>

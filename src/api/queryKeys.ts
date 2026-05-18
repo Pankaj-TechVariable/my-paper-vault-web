@@ -30,4 +30,7 @@ export const queryKeys = {
   sessions: {
     all: () => ['sessions'] as const,
   },
+  uploadLinks: {
+    public: (token: string) => ['upload-links', 'public', token] as const,
+  },
 };

@@ -3,7 +3,7 @@ const { readFileSync } = require("fs");
 const { resolve } = require("path");
 
 const env = readFileSync(resolve(__dirname, ".env"), "utf-8");
-const match = env.match(/^API_URL=(.+)$/m);
+const match = env.match(/^VITE_API_URL=(.+)$/m);
 
 if (!match) {
   console.error("API_URL not found in .env");
