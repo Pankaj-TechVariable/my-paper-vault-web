@@ -3,13 +3,18 @@ import { MdOutlineStorage } from "react-icons/md";
 import { IoMdDocument } from "react-icons/io";
 import { FaShieldAlt } from "react-icons/fa";
 import { useDocumentCount } from "@/hooks/useDocuments";
+import { useSubscriptionStore } from "@/store/subscriptionStore";
 import StatCard from "@/components/common/StatCard/StatCard";
+import StorageBar from "@/components/common/StorageBar/StorageBar";
 import RecentDocuments from "./components/RecentDocuments";
+import PlanCard from "./components/PlanCard";
 import { quickActions, securityItems } from "./homeConstants";
 
 const Home = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useDocumentCount();
+  const storage = useSubscriptionStore((s) => s.storage);
+  const isSubscriptionLoaded = useSubscriptionStore((s) => s.isLoaded);
 
   const total = data?.data.total ?? 0;
 
@@ -30,7 +35,7 @@ const Home = () => {
 
   const displayStats = [
     ...top2.map((d) => ({ label: d.directory_name, count: d.count })),
-    { label: "Other", count: otherCount },
+    ...(otherCount > 0 ? [{ label: "Other", count: otherCount }] : []),
   ];
 
   return (
@@ -66,23 +71,36 @@ const Home = () => {
         >
           <p className="text-sm font-bold text-slate-900">{total}</p>
           <div className="flex gap-2 mt-1.5 flex-wrap">
-            {displayStats.map((stat) => (
-              <span key={stat.label} className="text-xs text-slate-400">
+            {displayStats.map((stat, i) => (
+              <span key={i} className="text-xs text-slate-400">
                 {stat.label}: {stat.count}
               </span>
             ))}
           </div>
         </StatCard>
 
-        <StatCard label="Storage Used" icon={<MdOutlineStorage size={16} />}>
-          <p className="text-sm font-bold text-slate-900">47%</p>
-          <div className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full"
-              style={{ width: "47%" }}
+        <StatCard
+          label="Storage Used"
+          icon={<MdOutlineStorage size={16} />}
+          isLoading={!isSubscriptionLoaded}
+          skeleton={
+            <>
+              <div className="h-3 w-28 bg-slate-100 rounded animate-pulse mb-2" />
+              <div className="h-1.5 w-full bg-slate-100 rounded-full animate-pulse mb-1.5" />
+              <div className="h-3 w-20 bg-slate-100 rounded animate-pulse" />
+            </>
+          }
+        >
+          {storage ? (
+            <StorageBar
+              usedBytes={storage.used_bytes}
+              totalBytes={storage.total_bytes}
+              usedPercent={storage.used_percent}
+              threshold={storage.threshold}
             />
-          </div>
-          <p className="text-xs text-slate-400 mt-1">Family Plan · 5 GB</p>
+          ) : (
+            <p className="text-xs text-slate-400">No storage data</p>
+          )}
         </StatCard>
 
         <StatCard label="MFA & Encryption" icon={<FaShieldAlt size={16} />}>
@@ -120,24 +138,7 @@ const Home = () => {
           </div>
 
           {/* Plan card */}
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 cursor-pointer hover:border-amber-300 transition-colors">
-            <p className="text-xs font-semibold text-amber-800 mb-2">
-              👑 Family Plan — Currently Active
-            </p>
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs text-slate-500">6 of 20 documents</span>
-              <span className="text-xs font-bold text-amber-600">30%</span>
-            </div>
-            <div className="h-1.5 bg-amber-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-amber-400 rounded-full"
-                style={{ width: "30%" }}
-              />
-            </div>
-            <p className="text-xs text-slate-400 mt-2">
-              Renews March 16, 2026 · ₦10,000
-            </p>
-          </div>
+          <PlanCard />
 
           {/* Security Status */}
           <div className="bg-white rounded-2xl border border-slate-100 p-4 md:p-5">

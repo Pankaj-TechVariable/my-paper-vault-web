@@ -1,5 +1,5 @@
-import type { GetDirectoriesParams } from './endpoints/directories';
-import type { GetDocumentsParams } from './endpoints/documents';
+import type { GetDirectoriesParams } from "./endpoints/directories";
+import type { GetDocumentsParams } from "./endpoints/documents";
 
 /**
  * Centralised query key factory.
@@ -14,23 +14,27 @@ import type { GetDocumentsParams } from './endpoints/documents';
  */
 export const queryKeys = {
   directories: {
-    all: () => ['user-directories'] as const,
+    all: () => ["user-directories"] as const,
     list: (params?: GetDirectoriesParams) =>
       [...queryKeys.directories.all(), params] as const,
   },
   documents: {
-    all: () => ['documents'] as const,
+    all: () => ["documents"] as const,
     list: (params?: GetDocumentsParams) =>
       [...queryKeys.documents.all(), params] as const,
-    count: () => [...queryKeys.documents.all(), 'count'] as const,
+    count: () => [...queryKeys.documents.all(), "count"] as const,
   },
   profilePicture: {
-    get: () => ['profile-picture'] as const,
+    get: () => ["profile-picture"] as const,
   },
   sessions: {
-    all: () => ['sessions'] as const,
+    all: () => ["sessions"] as const,
   },
   uploadLinks: {
-    public: (token: string) => ['upload-links', 'public', token] as const,
+    public: (token: string) => ["upload-links", "public", token] as const,
+  },
+  subscription: {
+    me: () => ["subscription", "me"] as const,
+    plans: () => ["subscription", "plans"] as const,
   },
 };

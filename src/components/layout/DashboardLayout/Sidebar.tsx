@@ -14,6 +14,7 @@ import { FaShieldAlt } from "react-icons/fa";
 import logo from "@/assets/logo/logo.png";
 import Button from "@/components/common/Button/Button";
 import { useSignOut } from "@/hooks/useAuth";
+import { useSubscriptionStore } from "@/store/subscriptionStore";
 
 const navItems = [
   { icon: MdOutlineHome, label: "Dashboard", to: "/home" },
@@ -33,6 +34,17 @@ interface SidebarProps {
 const NavContent = ({ onClose }: { onClose: () => void }) => {
   const { pathname } = useLocation();
   const { mutate: signOut, isPending } = useSignOut();
+  const subscription = useSubscriptionStore((s) => s.subscription);
+  const isLoaded = useSubscriptionStore((s) => s.isLoaded);
+
+  const planName = subscription?.subscriptionPlan.name;
+  const isTrial = !!subscription?.trial_ends_at;
+  const renewalDate = subscription
+    ? new Date(
+        isTrial ? subscription.trial_ends_at! : subscription.end_date,
+      ).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })
+    : null;
+  const renewalLabel = isTrial ? `Trial ends ${renewalDate}` : `Renews ${renewalDate}`;
 
   return (
     <div className="flex flex-col h-full">
@@ -60,10 +72,17 @@ const NavContent = ({ onClose }: { onClose: () => void }) => {
       </nav>
 
       <div className="px-3 pb-5 flex flex-col gap-3">
-        <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-3">
-          <p className="text-xs font-semibold text-amber-800">👑 Family Plan</p>
-          <p className="text-xs text-amber-600 mt-0.5">Renews Mar 16, 2026</p>
-        </div>
+        {!isLoaded ? (
+          <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-3 animate-pulse">
+            <div className="h-3 w-24 bg-amber-100 rounded mb-1.5" />
+            <div className="h-3 w-32 bg-amber-100 rounded" />
+          </div>
+        ) : planName ? (
+          <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-3">
+            <p className="text-xs font-semibold text-amber-800">👑 {planName}</p>
+            <p className="text-xs text-amber-600 mt-0.5">{renewalLabel}</p>
+          </div>
+        ) : null}
 
         <Button
           label="Sign Out"

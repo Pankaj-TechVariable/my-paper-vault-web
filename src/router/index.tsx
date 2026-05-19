@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import AppLayout from "@/components/layout/AppLayout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useAuthStore } from "@/store/authStore";
+import { useSubscription } from "@/hooks/useSubscription";
 
 const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
@@ -20,6 +21,7 @@ const PageLoader = () => (
 const ProtectedRoute = () => {
   const session = useAuthStore((s) => s.session);
   const isLoading = useAuthStore((s) => s.isLoading);
+  useSubscription();
 
   if (isLoading) return <PageLoader />;
   if (!session) return <Navigate to="/login" replace />;

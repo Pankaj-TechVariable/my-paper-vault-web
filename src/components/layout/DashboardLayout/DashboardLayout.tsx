@@ -5,6 +5,7 @@ import logo from "@/assets/logo/logo.png";
 import { useAuthStore } from "@/store/authStore";
 import { useGetProfilePicture } from "@/hooks/useProfile";
 import Sidebar from "./Sidebar";
+import SubscriptionBanner from "@/components/layout/SubscriptionBanner/SubscriptionBanner";
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -62,6 +63,8 @@ const DashboardLayout = () => {
           </div>
         </div>
       </header>
+
+      <SubscriptionBanner />
 
       {/* Below topbar: sidebar + page content */}
       <div className="flex flex-1 min-h-0">
