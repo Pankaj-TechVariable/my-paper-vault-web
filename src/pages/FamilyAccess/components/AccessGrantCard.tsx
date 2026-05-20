@@ -1,10 +1,4 @@
 import { createElement, useState } from "react";
-import {
-  MdOutlineVisibility,
-  MdOutlineCloudUpload,
-  MdOutlineFileDownload,
-  MdOutlinePersonRemove,
-} from "react-icons/md";
 import type {
   AccessGrant,
   AccessGrantDirectory,

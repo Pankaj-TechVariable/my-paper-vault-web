@@ -3,7 +3,6 @@ import {
   MdOutlinePeopleAlt,
   MdOutlineFolderOpen,
   MdOutlineDescription,
-  MdOutlineShare,
 } from "react-icons/md";
 import { useListAccessGrants } from "@/hooks/useFamilyAccess";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
