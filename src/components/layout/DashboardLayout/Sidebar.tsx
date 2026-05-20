@@ -19,7 +19,11 @@ const navItems = [
   { icon: MdOutlineHome, label: "Dashboard", to: "/home" },
   { icon: MdOutlineArchive, label: "Documents", to: "/documents" },
   { icon: MdOutlinePeopleAlt, label: "Family Access", to: "/family-access" },
-  { icon: MdOutlineFolderSpecial, label: "My Family Vaults", to: "/vaults" },
+  {
+    icon: MdOutlineFolderSpecial,
+    label: "My Family Vaults",
+    to: "/family-vaults",
+  },
   { icon: MdOutlineLink, label: "My Links", to: "/links" },
   { icon: FaShieldAlt, label: "Security", to: "/security" },
   { icon: MdOutlineCreditCard, label: "Subscription", to: "/subscription" },

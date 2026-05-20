@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   signUp,
   signIn,
@@ -46,6 +46,7 @@ export const useSignIn = () => {
 
 export const useSignOut = () => {
   const clearSession = useAuthStore((state) => state.clearSession);
+  const queryClient = useQueryClient();
 
   return useMutation<SignoutResponse, AppError, void>({
     mutationFn: signOut,
@@ -53,6 +54,7 @@ export const useSignOut = () => {
       if (!data.success) {
         return toast.error("Something went wrong", "Please try again.");
       }
+      queryClient.clear();
       clearSession();
     },
     onError: handleApiError,
@@ -125,6 +127,7 @@ export const useResetPassword = () => {
 
 export const useSignOutAll = () => {
   const clearSession = useAuthStore((state) => state.clearSession);
+  const queryClient = useQueryClient();
 
   return useMutation<SignoutAllResponse, AppError, void>({
     mutationFn: signOutAll,
@@ -132,6 +135,7 @@ export const useSignOutAll = () => {
       if (!data.success) {
         return toast.error("Something went wrong", "Please try again.");
       }
+      queryClient.clear();
       clearSession();
     },
     onError: handleApiError,
@@ -140,6 +144,7 @@ export const useSignOutAll = () => {
 
 export const useChangePassword = () => {
   const clearSession = useAuthStore((state) => state.clearSession);
+  const queryClient = useQueryClient();
 
   return useMutation<
     ChangePasswordResponse,
@@ -153,6 +158,7 @@ export const useChangePassword = () => {
       }
       toast.success(data?.message || "Password changed successfully.");
       await signOutAll().catch(() => null);
+      queryClient.clear();
       clearSession();
     },
     onError: handleApiError,

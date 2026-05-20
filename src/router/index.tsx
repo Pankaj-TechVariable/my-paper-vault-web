@@ -5,11 +5,13 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useAuthStore } from "@/store/authStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import FamilyAccess from "@/pages/FamilyAccess";
+import FamilyVaults from "@/pages/FamilyVaults/FamilyVaults";
 
 const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
 const Login = lazy(() => import("@/pages/Login"));
 const DocumentArchive = lazy(() => import("@/pages/DocumentArchive"));
+const VaultDocuments = lazy(() => import("@/pages/VaultDocuments"));
 const PublicUpload = lazy(() => import("@/pages/PublicUpload"));
 
 const PageLoader = () => (
@@ -60,6 +62,8 @@ function AppRouter() {
             <Route path="/home" element={<Home />} />
             <Route path="/documents" element={<DocumentArchive />} />
             <Route path="/family-access" element={<FamilyAccess />} />
+            <Route path="/family-vaults" element={<FamilyVaults />} />
+            <Route path="/vaults/directory/:directoryId" element={<VaultDocuments />} />
           </Route>
         </Route>
       </Routes>

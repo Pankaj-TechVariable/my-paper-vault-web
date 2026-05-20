@@ -86,6 +86,7 @@ export const useGrantAccess = () => {
         return toast.error("Failed to share access", "Please try again.");
       }
       queryClient.invalidateQueries({ queryKey: queryKeys.accessGrants.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.directoryMembers.all() });
       toast.success("Access shared successfully");
     },
     onError: handleApiError,
@@ -106,6 +107,7 @@ export const useRevokeAccess = () => {
         return toast.error("Failed to revoke access", "Please try again.");
       }
       queryClient.invalidateQueries({ queryKey: queryKeys.accessGrants.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.directoryMembers.all() });
       toast.success("Access revoked");
     },
     onError: handleApiError,

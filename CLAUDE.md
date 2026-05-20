@@ -94,6 +94,17 @@ className={`... border-r-3 ${active ? "bg-blue-50 text-primary border-primary" :
 
 **Responsive breakpoints:** `sm` 640, `md` 768, `lg` 1024, `xl` 1280. Mobile-first (no prefix = mobile).
 
+**Tailwind v4 `!important` modifier:** Use the **suffix** form `class!` — never the `!class` prefix form (that's v3 syntax and the linter will flag it):
+```tsx
+// ✅ Correct (v4)
+className="h-auto! py-1! px-2.5! rounded-lg! text-xs!"
+
+// ❌ Wrong (v3 — do not use)
+className="!h-auto !py-1 !px-2.5"
+```
+
+**Stats/details sections hidden on mobile:** Use `hidden md:grid` (or `hidden md:flex`) to hide dashboard stat grids on small screens where they add noise.
+
 ---
 
 ## API Client
@@ -180,8 +191,16 @@ export const useRenameDocument = () => {
 **Rules:**
 - Always check `if (!data.success)` before `toast.success` — don't assume success on 200.
 - `onError: handleApiError` — always, no custom error handling in components.
-- `staleTime`: 5 min for documents, 10 min for directories.
+- `staleTime`: 5 min for documents/family data, 10 min for directories.
 - No retry on network errors or 4xx responses.
+
+**Required invalidations (must not be omitted):**
+| Mutation | Keys to invalidate |
+|---|---|
+| Delete document | `documents.all()` + `documents.count()` |
+| Delete documents (bulk) | `documents.all()` + `documents.count()` |
+| Grant access | `accessGrants.all()` + `directoryMembers.all()` |
+| Revoke access | `accessGrants.all()` + `directoryMembers.all()` |
 
 ---
 
@@ -291,9 +310,107 @@ Variants: `contained` (bg-primary, white text), `outlined` (border-primary), `te
 
 Renders: mime icon (category-colored), name, category badge (icon + dir name), date, file size, owner, chevron.
 
+Automatically shows a **"Via Link"** badge (`FaLink` icon, indigo color) when `document.uploaded_via_link_id` is non-null, and displays the uploader name from `document.uploaded_by`.
+
+### ConfirmModal
+
+Use for all destructive confirmations — never inline confirm/cancel buttons in the list UI:
+```tsx
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
+
+<ConfirmModal
+  title="Revoke Access"
+  message={`Remove access for ${memberName} to "${dirName}"?`}
+  confirmLabel="Revoke"
+  onConfirm={handleRevoke}
+  onCancel={() => setConfirming(false)}
+  loading={isRevoking}
+  destructive
+/>
+```
+`destructive` prop styles the confirm button in red. `loading` disables both buttons and shows a spinner.
+
+### Button — compact/inline variant
+
+`contained` variant defaults to `h-10`. Override with Tailwind v4 `!` suffix for inline/row buttons:
+```tsx
+<Button
+  label="Revoke"
+  variant="contained"
+  className="shrink-0 h-auto! py-1! px-2.5! rounded-lg! bg-red-600 text-xs!"
+  loading={isRevoking}
+  onClick={handleRevoke}
+/>
+```
+
+### Slide-in Panel (right drawer)
+
+Full-screen on mobile, fixed-width on desktop. Use this structure:
+```tsx
+{/* Backdrop */}
+{isOpen && (
+  <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} />
+)}
+{/* Panel */}
+<div
+  className={`fixed top-0 right-0 z-50 h-full w-full sm:w-96 bg-white shadow-xl
+    flex flex-col transition-transform duration-300
+    ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+>
+  {/* header + scrollable body + footer */}
+</div>
+```
+Reset form state when the panel closes via `useEffect(() => { if (!isOpen) resetForm(); }, [isOpen])`.
+
+### Custom DropdownSelect (for fixed/overflow panels)
+
+**Never use native `<select>` inside a `position: fixed` or `overflow: hidden` container** — the browser renders the native dropdown relative to the viewport, making it appear in the wrong position.
+
+Use a custom dropdown instead:
+```tsx
+const DropdownSelect = ({ placeholder, options, value, onChange, disabled }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button onClick={() => !disabled && setOpen((o) => !o)} ...>
+        {/* selected label or placeholder */}
+      </button>
+      {open && (
+        <ul className="absolute left-0 right-0 top-[calc(100%+4px)] z-60 bg-white border rounded-xl shadow-lg max-h-48 overflow-y-auto">
+          {options.map((opt) => (
+            <li key={opt.value} onClick={() => { onChange(opt.value); setOpen(false); }} ...>
+              {opt.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+```
+
 ---
 
 ## Zustand Stores
+
+### subscriptionStore
+```ts
+const canManageFamily = useSubscriptionStore((s) => s.canManageFamily());
+```
+Use `canManageFamily()` (and similar selectors) to gate features behind active subscription. Pass the result as `disabled` to buttons:
+```tsx
+<Button label="Share Access" disabled={!canManageFamily()} ... />
+```
 
 ### authStore
 ```ts
@@ -338,6 +455,20 @@ All page components are `lazy()` loaded. `Suspense` wraps all routes with `PageL
 1. Create `src/pages/MyPage/MyPage.tsx` + `index.ts`
 2. `lazy(() => import("@/pages/MyPage"))`
 3. Add inside `<ProtectedRoute><DashboardLayout>` block
+
+**Passing context to child routes via location state:**
+```tsx
+// Sender (parent page)
+navigate(`/vaults/directory/${dir.id}`, {
+  state: { directoryName: dir.name, grantorName, categoryType: dir.category?.type },
+});
+
+// Receiver (child page)
+interface MyPageState { directoryName?: string; grantorName?: string; categoryType?: string; }
+const { state } = useLocation() as { state: MyPageState | null };
+const directoryName = state?.directoryName ?? "Fallback Name";
+```
+Use this pattern to pass display context (names, types) when navigating to a detail/sub-page so the child doesn't need an extra API call just to render a title.
 
 ---
 
@@ -422,6 +553,21 @@ Never access `import.meta.env` directly outside `src/config/env.ts`.
 - Derive API types from generated schema: `type Document = GetDocumentsResponse['data'][number]`.
 - Store interfaces split into data + actions: `interface AuthState extends AuthData, AuthActions`.
 
+**Extending generated types for fields not yet in the spec:**
+When the API returns fields that `npm run api:types` hasn't picked up yet, extend locally with an intersection type and a comment:
+```ts
+// Extend until `npm run api:types` picks up the updated spec.
+export type Document = GetDocumentsResponse['data'][number] & {
+  uploaded_via_link_id: string | null;
+  uploaded_by: string | null;
+};
+```
+Remove the extension (and the comment) after regenerating types.
+
+**Document upload source fields:**
+- `uploaded_via_link_id: string | null` — non-null means the document was uploaded via a public share link
+- `uploaded_by: string | null` — the uploader's display name (not a user ID); null when uploaded by the vault owner themselves
+
 ---
 
 ## Skeleton Loading Pattern
@@ -454,6 +600,15 @@ Always extract skeleton rows/items into a named component (e.g. `SkeletonRow`, `
 4. On 401, middleware attempts token refresh via `/auth/refresh-token` (cookie sent automatically).
 5. If refresh fails → `clearSession()` → user redirected to `/login` by guard.
 6. Sign-out calls `/auth/signout` then `clearSession()`.
+
+**Logout must clear the query cache.** All three logout paths (`useSignOut`, `useSignOutAll`, `useChangePassword`) must call `queryClient.clear()` before `clearSession()` — otherwise stale data from the previous session leaks into the next login:
+```ts
+onSuccess: (data) => {
+  if (!data.success) return toast.error(...);
+  queryClient.clear();   // ← required on every logout path
+  clearSession();
+},
+```
 
 ---
 

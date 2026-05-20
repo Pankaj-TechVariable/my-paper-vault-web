@@ -66,6 +66,7 @@ export const useDeleteDocument = () => {
         return toast.error("Delete failed", "Please try again.");
       }
       queryClient.invalidateQueries({ queryKey: queryKeys.documents.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.documents.count() });
       toast.success("Document deleted");
     },
     onError: handleApiError,
@@ -80,6 +81,7 @@ export const useDeleteDocuments = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.documents.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.documents.count() });
       toast.success("Documents deleted");
     },
     onError: handleApiError,
