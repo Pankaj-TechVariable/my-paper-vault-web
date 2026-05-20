@@ -24,7 +24,7 @@ const navItems = [
     label: "My Family Vaults",
     to: "/family-vaults",
   },
-  { icon: MdOutlineLink, label: "My Links", to: "/links" },
+  { icon: MdOutlineLink, label: "My Links", to: "/my-links" },
   { icon: FaShieldAlt, label: "Security", to: "/security" },
   { icon: MdOutlineCreditCard, label: "Subscription", to: "/subscription" },
 ];

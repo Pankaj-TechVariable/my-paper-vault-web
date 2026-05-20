@@ -20,6 +20,7 @@ interface DocumentItemProps {
   isSelected?: boolean;
   showCheckbox?: boolean;
   isChecked?: boolean;
+  hideCheckbox?: boolean;
 }
 
 const DocumentItem = ({
@@ -30,6 +31,7 @@ const DocumentItem = ({
   isSelected,
   showCheckbox,
   isChecked,
+  hideCheckbox,
 }: DocumentItemProps) => {
   const categoryStyle = getCategoryStyle(directory?.category?.type ?? "");
 
@@ -63,9 +65,11 @@ const DocumentItem = ({
         {/* Mime icon */}
         <div
           className={`absolute inset-0 rounded-xl flex items-center justify-center transition-opacity ${categoryStyle.bgColor} ${
-            showCheckbox
-              ? "[@media(hover:none)]:opacity-0 [@media(hover:hover)]:opacity-0"
-              : "[@media(hover:hover)]:group-hover:opacity-0"
+            hideCheckbox
+              ? ""
+              : showCheckbox
+                ? "[@media(hover:none)]:opacity-0 [@media(hover:hover)]:opacity-0"
+                : "[@media(hover:hover)]:group-hover:opacity-0"
           }`}
         >
           {createElement(getMimeIcon(document.mime_type), {
@@ -75,19 +79,21 @@ const DocumentItem = ({
         </div>
 
         {/* Checkbox — touch: only when multiselect active; pointer: hover-reveal or multiselect */}
-        <div
-          className={`absolute inset-0 items-center justify-center transition-opacity ${
-            showCheckbox
-              ? "flex opacity-100"
-              : "hidden [@media(hover:hover)]:flex opacity-0 group-hover:opacity-100"
-          }`}
-        >
-          {isChecked ? (
-            <MdCheckCircle size={26} className="text-primary" />
-          ) : (
-            <MdRadioButtonUnchecked size={26} className="text-slate-300" />
-          )}
-        </div>
+        {!hideCheckbox && (
+          <div
+            className={`absolute inset-0 items-center justify-center transition-opacity ${
+              showCheckbox
+                ? "flex opacity-100"
+                : "hidden [@media(hover:hover)]:flex opacity-0 group-hover:opacity-100"
+            }`}
+          >
+            {isChecked ? (
+              <MdCheckCircle size={26} className="text-primary" />
+            ) : (
+              <MdRadioButtonUnchecked size={26} className="text-slate-300" />
+            )}
+          </div>
+        )}
       </div>
 
       {/* Info */}

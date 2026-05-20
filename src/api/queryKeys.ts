@@ -47,6 +47,13 @@ export const queryKeys = {
   uploadLinks: {
     public: (token: string) => ["upload-links", "public", token] as const,
   },
+  uploadLinksPrivate: {
+    all: () => ["upload-links"] as const,
+    list: (params?: { active?: "true" | "false" }) =>
+      [...queryKeys.uploadLinksPrivate.all(), params] as const,
+    detail: (id: string) =>
+      [...queryKeys.uploadLinksPrivate.all(), id] as const,
+  },
   subscription: {
     me: () => ["subscription", "me"] as const,
     plans: () => ["subscription", "plans"] as const,

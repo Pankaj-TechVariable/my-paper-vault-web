@@ -18,13 +18,13 @@ export const quickActions = [
     icon: <MdOutlinePeopleAlt size={22} />,
     title: "Family Access",
     desc: "Manage sharing",
-    to: "/family",
+    to: "/family-access",
   },
   {
     icon: <MdOutlineFolderSpecial size={22} />,
     title: "My Family Vaults",
     desc: "Shared with you",
-    to: "/vaults",
+    to: "/family-vaults",
   },
   {
     icon: <MdOutlineLink size={22} />,

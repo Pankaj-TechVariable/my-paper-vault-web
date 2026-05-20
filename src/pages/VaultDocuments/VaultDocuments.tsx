@@ -113,11 +113,11 @@ const VaultDocuments = () => {
         <div
           className={`overflow-y-auto ${showRightPanel ? "lg:col-span-8" : ""}`}
         >
-          <div className="flex flex-col gap-2">
+          <div className={`grid gap-2 ${showRightPanel ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"}`}>
             {isLoading ? (
               Array.from({ length: 6 }).map((_, i) => <SkeletonItem key={i} />)
             ) : documents.length === 0 ? (
-              <div className="text-center py-16 text-slate-400">
+              <div className="col-span-full text-center py-16 text-slate-400">
                 <p className="text-sm font-medium">No documents found</p>
                 <p className="text-xs mt-1">
                   {searchQuery
@@ -132,6 +132,7 @@ const VaultDocuments = () => {
                   document={doc}
                   onClick={handleItemClick}
                   isSelected={selectedDocId === doc.id}
+                  hideCheckbox
                 />
               ))
             )}

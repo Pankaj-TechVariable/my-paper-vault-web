@@ -6,6 +6,8 @@ import { useAuthStore } from "@/store/authStore";
 import { useSubscription } from "@/hooks/useSubscription";
 import FamilyAccess from "@/pages/FamilyAccess";
 import FamilyVaults from "@/pages/FamilyVaults/FamilyVaults";
+import MyLinks from "@/pages/MyLinks/MyLinks";
+const LinkDetails = lazy(() => import("@/pages/LinkDetails"));
 
 const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
@@ -63,7 +65,12 @@ function AppRouter() {
             <Route path="/documents" element={<DocumentArchive />} />
             <Route path="/family-access" element={<FamilyAccess />} />
             <Route path="/family-vaults" element={<FamilyVaults />} />
-            <Route path="/vaults/directory/:directoryId" element={<VaultDocuments />} />
+            <Route
+              path="/vaults/directory/:directoryId"
+              element={<VaultDocuments />}
+            />
+            <Route path="/my-links" element={<MyLinks />} />
+            <Route path="/my-links/:id" element={<LinkDetails />} />
           </Route>
         </Route>
       </Routes>
