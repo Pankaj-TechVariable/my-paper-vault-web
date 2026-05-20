@@ -4,6 +4,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useAuthStore } from "@/store/authStore";
 import { useSubscription } from "@/hooks/useSubscription";
+import FamilyAccess from "@/pages/FamilyAccess";
 
 const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
@@ -58,6 +59,7 @@ function AppRouter() {
           <Route element={<DashboardLayout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/documents" element={<DocumentArchive />} />
+            <Route path="/family-access" element={<FamilyAccess />} />
           </Route>
         </Route>
       </Routes>

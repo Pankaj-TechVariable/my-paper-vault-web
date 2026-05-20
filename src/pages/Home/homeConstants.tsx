@@ -22,13 +22,13 @@ export const quickActions = [
   },
   {
     icon: <MdOutlineFolderSpecial size={22} />,
-    title: "Family Vaults",
+    title: "My Family Vaults",
     desc: "Shared with you",
     to: "/vaults",
   },
   {
     icon: <MdOutlineLink size={22} />,
-    title: "Create Link",
+    title: "Generate Secure Upload Link",
     desc: "Secure upload link",
     to: "/links",
   },

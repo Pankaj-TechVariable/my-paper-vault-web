@@ -30,6 +30,20 @@ export const queryKeys = {
   sessions: {
     all: () => ["sessions"] as const,
   },
+  directoryMembers: {
+    all: () => ["directory-members"] as const,
+    byDirectory: (directoryId: string) =>
+      [...queryKeys.directoryMembers.all(), directoryId] as const,
+  },
+  accessGrants: {
+    all: () => ["access-grants"] as const,
+  },
+  familyMembers: {
+    all: () => ["family-members"] as const,
+  },
+  myAccess: {
+    all: () => ["my-access"] as const,
+  },
   uploadLinks: {
     public: (token: string) => ["upload-links", "public", token] as const,
   },
