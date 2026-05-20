@@ -9,6 +9,8 @@ import {
   MdOutlineStorage,
   MdOutlineInsertDriveFile,
   MdOutlineVisibility,
+  MdOutlinePerson,
+  MdOutlineLink,
 } from "react-icons/md";
 import type { Document } from "@/api/endpoints/documents";
 import type { Directory } from "@/api/endpoints/directories";
@@ -101,6 +103,20 @@ const DocumentDetail = ({
             label="File Type"
             value={document.mime_type}
           />
+          {document.uploaded_by && (
+            <DetailRow
+              icon={<MdOutlinePerson size={15} />}
+              label="Uploaded By"
+              value={document.uploaded_by}
+            />
+          )}
+          {document.uploaded_via_link_id && (
+            <DetailRow
+              icon={<MdOutlineLink size={15} />}
+              label="Source"
+              value="Via Link"
+            />
+          )}
         </div>
 
         {/* Actions */}

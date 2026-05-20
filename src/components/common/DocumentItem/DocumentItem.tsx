@@ -5,6 +5,7 @@ import {
   FaCalendar,
   FaDatabase,
   FaUser,
+  FaLink,
 } from "react-icons/fa6";
 import type { Document } from "@/api/endpoints/documents";
 import type { Directory } from "@/api/endpoints/directories";
@@ -117,8 +118,14 @@ const DocumentItem = ({
             {formatFileSize(document.file_size)}
           </span>
           <span className="flex items-center gap-1 text-xs text-slate-500">
-            <FaUser size={10} color="#475569" /> Owner
+            <FaUser size={10} color="#475569" />
+            {document.uploaded_by ?? "Owner"}
           </span>
+          {document.uploaded_via_link_id && (
+            <span className="flex items-center gap-1 text-xs font-medium text-indigo-500 bg-indigo-50 px-1.5 py-0.5 rounded-full">
+              <FaLink size={9} /> Via Link
+            </span>
+          )}
         </div>
       </div>
 

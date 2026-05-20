@@ -26,7 +26,11 @@ export type RenameDocumentResponse =
   components['schemas']['RenameDocumentResponse'];
 export type DeleteDocumentResponse =
   components['schemas']['DeleteDocumentResponse'];
-export type Document = GetDocumentsResponse['data'][number];
+// Extend until `npm run api:types` picks up the updated spec.
+export type Document = GetDocumentsResponse['data'][number] & {
+  uploaded_via_link_id: string | null;
+  uploaded_by: string | null; // uploader name, not a user ID
+};
 
 export const getDownloadUrl = async (
   id: string,
