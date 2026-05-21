@@ -31,6 +31,7 @@ export const quickActions = [
     title: "Generate Secure Upload Link",
     desc: "Secure upload link",
     to: "/links",
+    action: "generate-link" as const,
   },
 ];
 

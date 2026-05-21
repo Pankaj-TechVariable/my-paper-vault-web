@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { MdOutlineLink } from "react-icons/md";
 import { useUploadLinks } from "@/hooks/useUploadLinks";
+import { useSubscriptionStore } from "@/store/subscriptionStore";
 import type { GetUploadLinksParams } from "@/api/endpoints/uploadLinksPrivate";
+import Button from "@/components/common/Button/Button";
 import LinkItem from "./components/LinkItem";
 import LinkSkeletonItem from "./components/LinkSkeletonItem";
 import EmptyLinksState from "./components/EmptyLinksState";
+import GenerateLinkPanel from "./components/GenerateLinkPanel";
 
 type FilterType = "all" | "active" | "inactive";
 
@@ -21,13 +25,25 @@ const filterToParams = (filter: FilterType): GetUploadLinksParams | undefined =>
 
 const MyLinks = () => {
   const [filter, setFilter] = useState<FilterType>("all");
+  const [panelOpen, setPanelOpen] = useState(false);
   const { data, isLoading } = useUploadLinks(filterToParams(filter));
+  const canManageFamily = useSubscriptionStore((s) => s.canManageFamily());
   const links = data?.data ?? [];
 
   return (
     <div className="h-full flex flex-col overflow-hidden px-4 md:px-8 py-6">
       <div className="mb-5 shrink-0">
-        <h1 className="text-xl font-bold text-slate-900 mb-1">My Upload Links</h1>
+        <div className="flex items-start justify-between gap-3 mb-1">
+          <h1 className="text-xl font-bold text-slate-900">My Upload Links</h1>
+          <Button
+            label="Generate Link"
+            variant="contained"
+            startIcon={<MdOutlineLink size={16} className="text-white" />}
+            className="h-auto! py-1.5! px-3! text-xs! shrink-0"
+            disabled={!canManageFamily}
+            onClick={() => setPanelOpen(true)}
+          />
+        </div>
         <p className="text-xs text-slate-400 mb-4">
           {isLoading
             ? "Loading..."
@@ -62,6 +78,8 @@ const MyLinks = () => {
           )}
         </div>
       </div>
+
+      <GenerateLinkPanel isOpen={panelOpen} onClose={() => setPanelOpen(false)} />
     </div>
   );
 };

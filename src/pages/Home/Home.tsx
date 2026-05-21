@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineStorage } from "react-icons/md";
 import { IoMdDocument } from "react-icons/io";
@@ -6,12 +7,14 @@ import { useDocumentCount } from "@/hooks/useDocuments";
 import { useSubscriptionStore } from "@/store/subscriptionStore";
 import StatCard from "@/components/common/StatCard/StatCard";
 import StorageBar from "@/components/common/StorageBar/StorageBar";
+import GenerateLinkPanel from "@/pages/MyLinks/components/GenerateLinkPanel";
 import RecentDocuments from "./components/RecentDocuments";
 import PlanCard from "./components/PlanCard";
 import { quickActions, securityItems } from "./homeConstants";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
   const { data, isLoading } = useDocumentCount();
   const storage = useSubscriptionStore((s) => s.storage);
   const isSubscriptionLoaded = useSubscriptionStore((s) => s.isLoaded);
@@ -39,6 +42,7 @@ const Home = () => {
   ];
 
   return (
+    <>
     <div className="px-4 md:px-8 py-6">
       {/* Stats row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
@@ -124,7 +128,11 @@ const Home = () => {
               {quickActions.map((qa) => (
                 <button
                   key={qa.title}
-                  onClick={() => navigate(qa.to)}
+                  onClick={() =>
+                    qa.action === "generate-link"
+                      ? setGenerateLinkOpen(true)
+                      : navigate(qa.to)
+                  }
                   className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer text-center"
                 >
                   <span className="text-primary">{qa.icon}</span>
@@ -169,6 +177,12 @@ const Home = () => {
         </div>
       </div>
     </div>
+
+    <GenerateLinkPanel
+      isOpen={generateLinkOpen}
+      onClose={() => setGenerateLinkOpen(false)}
+    />
+    </>
   );
 };
 
