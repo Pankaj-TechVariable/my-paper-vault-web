@@ -21,18 +21,26 @@ const getDeviceStyle = (os: string | null, type: string | null): DeviceStyle => 
   const o = (os ?? "").toLowerCase();
   const t = (type ?? "").toLowerCase();
 
-  // Web browser takes priority — device_type is set to "web" by the web client
+  // Android / iOS always get their own icon regardless of device_type
+  if (o.includes("android"))
+    return { icon: FaAndroid, bg: "bg-green-100", color: "#16a34a" };
+  if (o.includes("ios") || o.includes("iphone") || o.includes("ipad"))
+    return { icon: FaApple, bg: "bg-slate-100", color: "#475569" };
+
+  // For everything else (macOS, Windows, Linux…) check device_type first:
+  // a desktop OS accessed via a web browser shows the web icon
   if (t === "web" || t.includes("browser"))
     return { icon: MdOutlineLanguage, bg: "bg-indigo-100", color: "#4f46e5" };
 
-  if (o.includes("ios") || o.includes("iphone") || o.includes("ipad") || o.includes("mac"))
+  // Non-browser desktop OS icons
+  if (o.includes("mac"))
     return { icon: FaApple, bg: "bg-slate-100", color: "#475569" };
-  if (o.includes("android"))
-    return { icon: FaAndroid, bg: "bg-green-100", color: "#16a34a" };
   if (o.includes("windows"))
     return { icon: FaWindows, bg: "bg-blue-100", color: "#2563eb" };
   if (o.includes("linux"))
     return { icon: FaLinux, bg: "bg-orange-100", color: "#ea580c" };
+
+  // Generic type fallbacks
   if (t.includes("mobile") || t.includes("phone"))
     return { icon: MdOutlineSmartphone, bg: "bg-purple-100", color: "#7c3aed" };
   if (t.includes("desktop") || t.includes("computer"))
