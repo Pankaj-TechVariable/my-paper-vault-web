@@ -8,6 +8,7 @@ import FamilyAccess from "@/pages/FamilyAccess";
 import FamilyVaults from "@/pages/FamilyVaults/FamilyVaults";
 import MyLinks from "@/pages/MyLinks/MyLinks";
 import FamilyMembers from "@/pages/FamilyMembers/FamilyMembers";
+import Profile from "@/pages/Profile";
 const LinkDetails = lazy(() => import("@/pages/LinkDetails"));
 const Subscription = lazy(() => import("@/pages/Subscription"));
 const SubscriptionPlans = lazy(() => import("@/pages/SubscriptionPlans"));
@@ -75,6 +76,7 @@ function AppRouter() {
             />
             <Route path="/my-links" element={<MyLinks />} />
             <Route path="/my-links/:id" element={<LinkDetails />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/subscription/plans" element={<SubscriptionPlans />} />
           </Route>

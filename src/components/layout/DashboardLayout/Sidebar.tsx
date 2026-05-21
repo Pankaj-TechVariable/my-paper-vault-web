@@ -28,6 +28,7 @@ const navItems = [
     to: "/family-vaults",
   },
   // { icon: FaShieldAlt, label: "Security", to: "/security" },
+  { icon: MdOutlineCreditCard, label: "Profile", to: "/profile" },
   { icon: MdOutlineCreditCard, label: "Subscription", to: "/subscription" },
 ];
 
