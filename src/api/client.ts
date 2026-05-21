@@ -25,9 +25,22 @@ export const apiClient = createFetchClient<paths>({
   fetch: fetchWithNetworkError,
 });
 
+// ─── Token helpers ─────────────────────────────────────────────────────────
+
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    if (!payload.exp) return false;
+    // Treat as expired 30 s early to avoid razor-thin races
+    return payload.exp * 1000 - 30_000 < Date.now();
+  } catch {
+    return false;
+  }
+};
+
 // ─── Token refresh lock ────────────────────────────────────────────────────
 // Ensures only one refresh call is in-flight at a time.
-// Concurrent 401s all await the same promise instead of each triggering a refresh.
+// Concurrent requests all await the same promise instead of each triggering a refresh.
 let refreshPromise: Promise<string | null> | null = null;
 
 const refreshAccessToken = async (): Promise<string | null> => {
@@ -71,11 +84,14 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
 // ─── Inject Bearer token ───────────────────────────────────────────────────
 apiClient.use({
-  onRequest({ request }) {
+  async onRequest({ request }) {
     const url = new URL(request.url);
     const isPublic = PUBLIC_ENDPOINTS.some((ep) => url.pathname.endsWith(ep));
     if (!isPublic) {
-      const token = useAuthStore.getState().session?.tokens.access_token;
+      let token = useAuthStore.getState().session?.tokens.access_token;
+      if (token && isTokenExpired(token)) {
+        token = (await refreshAccessToken()) ?? token;
+      }
       if (token) {
         request.headers.set("Authorization", `Bearer ${token}`);
       }
