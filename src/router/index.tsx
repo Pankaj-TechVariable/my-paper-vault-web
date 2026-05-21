@@ -12,6 +12,8 @@ import Profile from "@/pages/Profile";
 const LinkDetails = lazy(() => import("@/pages/LinkDetails"));
 const Subscription = lazy(() => import("@/pages/Subscription"));
 const SubscriptionPlans = lazy(() => import("@/pages/SubscriptionPlans"));
+const Security = lazy(() => import("@/pages/Security"));
+const Devices = lazy(() => import("@/pages/Devices"));
 
 const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home/Home"));
@@ -79,6 +81,8 @@ function AppRouter() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/subscription/plans" element={<SubscriptionPlans />} />
+            <Route path="/settings/security" element={<Security />} />
+            <Route path="/settings/devices" element={<Devices />} />
           </Route>
         </Route>
       </Routes>

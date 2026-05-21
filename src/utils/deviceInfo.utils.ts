@@ -24,6 +24,8 @@ const getOSVersion = (): string => {
   return "Unknown";
 };
 
+export const getDeviceId = (): string => getOrCreateDeviceId();
+
 export const getDeviceHeaders = (): Record<string, string> => ({
   "X-Device-Id": getOrCreateDeviceId(),
   "X-Device-Type": "web",

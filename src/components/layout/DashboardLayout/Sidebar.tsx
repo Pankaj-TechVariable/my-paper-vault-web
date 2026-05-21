@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   MdOutlineHome,
@@ -8,8 +9,11 @@ import {
   MdOutlineCreditCard,
   MdOutlineLogout,
   MdClose,
+  MdOutlineSettings,
+  MdOutlineLock,
+  MdOutlineDevices,
+  MdOutlineChevronRight,
 } from "react-icons/md";
-// import { FaShieldAlt } from "react-icons/fa";
 import { BsPersonLock } from "react-icons/bs";
 
 import logo from "@/assets/logo/logo.png";
@@ -22,14 +26,14 @@ const navItems = [
   { icon: MdOutlineLink, label: "My Links", to: "/my-links" },
   { icon: MdOutlinePeopleAlt, label: "Family Members", to: "/family-members" },
   { icon: BsPersonLock, label: "Family Access", to: "/family-access" },
-  {
-    icon: MdOutlineFolderSpecial,
-    label: "My Family Vaults",
-    to: "/family-vaults",
-  },
-  // { icon: FaShieldAlt, label: "Security", to: "/security" },
+  { icon: MdOutlineFolderSpecial, label: "My Family Vaults", to: "/family-vaults" },
   { icon: MdOutlineCreditCard, label: "Profile", to: "/profile" },
   { icon: MdOutlineCreditCard, label: "Subscription", to: "/subscription" },
+];
+
+const settingsSubItems = [
+  { icon: MdOutlineLock, label: "Security", to: "/settings/security" },
+  { icon: MdOutlineDevices, label: "Devices", to: "/settings/devices" },
 ];
 
 interface SidebarProps {
@@ -40,6 +44,9 @@ interface SidebarProps {
 const NavContent = ({ onClose }: { onClose: () => void }) => {
   const { pathname } = useLocation();
   const { mutate: signOut, isPending } = useSignOut();
+
+  const isOnSettingsRoute = pathname.startsWith("/settings");
+  const [settingsOpen, setSettingsOpen] = useState(isOnSettingsRoute);
 
   return (
     <div className="flex flex-col h-full">
@@ -63,6 +70,48 @@ const NavContent = ({ onClose }: { onClose: () => void }) => {
               </Link>
             );
           })}
+
+          {/* Settings expandable item */}
+          <button
+            type="button"
+            onClick={() => setSettingsOpen((o) => !o)}
+            className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors border-r-3 cursor-pointer w-full text-left ${
+              isOnSettingsRoute
+                ? "bg-blue-50 text-primary border-primary"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 border-transparent"
+            }`}
+          >
+            <MdOutlineSettings size={18} className="shrink-0" />
+            <span className="flex-1">Settings</span>
+            <MdOutlineChevronRight
+              size={16}
+              className={`shrink-0 transition-transform duration-200 ${settingsOpen ? "rotate-90" : ""}`}
+            />
+          </button>
+
+          {/* Sub-items */}
+          {settingsOpen && (
+            <div className="flex flex-col gap-0.5">
+              {settingsSubItems.map(({ icon: Icon, label, to }) => {
+                const active = pathname === to;
+                return (
+                  <Link
+                    key={to}
+                    to={to}
+                    onClick={onClose}
+                    className={`flex items-center gap-3 pl-9 pr-3 py-2 text-sm font-medium no-underline transition-colors border-r-3 ${
+                      active
+                        ? "bg-blue-50 text-primary border-primary"
+                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900 border-transparent"
+                    }`}
+                  >
+                    <Icon size={16} className="shrink-0" />
+                    {label}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </nav>
 
@@ -107,11 +156,7 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-2.5">
-            <img
-              src={logo}
-              alt="MyPaperVault"
-              className="w-8 h-8 object-contain"
-            />
+            <img src={logo} alt="MyPaperVault" className="w-8 h-8 object-contain" />
             <span
               className="font-extrabold text-sm text-slate-900"
               style={{ fontFamily: "'Sora', sans-serif" }}
