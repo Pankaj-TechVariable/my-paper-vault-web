@@ -10,6 +10,7 @@ import {
   MdClose,
 } from "react-icons/md";
 import { FaShieldAlt } from "react-icons/fa";
+import { BsPersonLock } from "react-icons/bs";
 
 import logo from "@/assets/logo/logo.png";
 import Button from "@/components/common/Button/Button";
@@ -18,13 +19,14 @@ import { useSignOut } from "@/hooks/useAuth";
 const navItems = [
   { icon: MdOutlineHome, label: "Dashboard", to: "/home" },
   { icon: MdOutlineArchive, label: "Documents", to: "/documents" },
-  { icon: MdOutlinePeopleAlt, label: "Family Access", to: "/family-access" },
+  { icon: MdOutlineLink, label: "My Links", to: "/my-links" },
+  { icon: MdOutlinePeopleAlt, label: "Family Members", to: "/family-members" },
+  { icon: BsPersonLock, label: "Family Access", to: "/family-access" },
   {
     icon: MdOutlineFolderSpecial,
     label: "My Family Vaults",
     to: "/family-vaults",
   },
-  { icon: MdOutlineLink, label: "My Links", to: "/my-links" },
   { icon: FaShieldAlt, label: "Security", to: "/security" },
   { icon: MdOutlineCreditCard, label: "Subscription", to: "/subscription" },
 ];

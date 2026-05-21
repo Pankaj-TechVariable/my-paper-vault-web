@@ -40,6 +40,10 @@ export const queryKeys = {
   },
   familyMembers: {
     all: () => ["family-members"] as const,
+    invites: (direction?: "received" | "sent") =>
+      direction
+        ? (["family-members", "invites", direction] as const)
+        : (["family-members", "invites"] as const),
   },
   myAccess: {
     all: () => ["my-access"] as const,

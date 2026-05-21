@@ -7,6 +7,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import FamilyAccess from "@/pages/FamilyAccess";
 import FamilyVaults from "@/pages/FamilyVaults/FamilyVaults";
 import MyLinks from "@/pages/MyLinks/MyLinks";
+import FamilyMembers from "@/pages/FamilyMembers/FamilyMembers";
 const LinkDetails = lazy(() => import("@/pages/LinkDetails"));
 
 const Landing = lazy(() => import("@/pages/Landing"));
@@ -63,6 +64,7 @@ function AppRouter() {
           <Route element={<DashboardLayout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/documents" element={<DocumentArchive />} />
+            <Route path="/family-members" element={<FamilyMembers />} />
             <Route path="/family-access" element={<FamilyAccess />} />
             <Route path="/family-vaults" element={<FamilyVaults />} />
             <Route

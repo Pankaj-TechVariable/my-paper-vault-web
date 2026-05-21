@@ -11,7 +11,7 @@ const MESSAGES: Record<EmptyLinksStateProps["filter"], string> = {
 };
 
 const EmptyLinksState = ({ filter }: EmptyLinksStateProps) => (
-  <div className="text-center py-16">
+  <div className="col-span-full flex flex-col items-center justify-center py-24">
     <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-3">
       <MdOutlineLink size={22} className="text-slate-300" />
     </div>
