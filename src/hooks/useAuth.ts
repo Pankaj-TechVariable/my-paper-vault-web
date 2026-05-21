@@ -20,6 +20,7 @@ import {
   signOut,
 } from "@/api/endpoints/auth";
 import { useAuthStore } from "@/store/authStore";
+import { useSubscriptionStore } from "@/store/subscriptionStore";
 import { AppError } from "@/errors/AppError";
 import { handleApiError } from "@/errors/errorHandler";
 import { toast } from "@/lib/toast";
@@ -44,8 +45,13 @@ export const useSignIn = () => {
   });
 };
 
+const clearAllStores = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.clear();
+  useSubscriptionStore.getState().clear();
+  useAuthStore.getState().clearSession();
+};
+
 export const useSignOut = () => {
-  const clearSession = useAuthStore((state) => state.clearSession);
   const queryClient = useQueryClient();
 
   return useMutation<SignoutResponse, AppError, void>({
@@ -54,8 +60,7 @@ export const useSignOut = () => {
       if (!data.success) {
         return toast.error("Something went wrong", "Please try again.");
       }
-      queryClient.clear();
-      clearSession();
+      clearAllStores(queryClient);
     },
     onError: handleApiError,
   });
@@ -126,7 +131,6 @@ export const useResetPassword = () => {
 };
 
 export const useSignOutAll = () => {
-  const clearSession = useAuthStore((state) => state.clearSession);
   const queryClient = useQueryClient();
 
   return useMutation<SignoutAllResponse, AppError, void>({
@@ -135,15 +139,13 @@ export const useSignOutAll = () => {
       if (!data.success) {
         return toast.error("Something went wrong", "Please try again.");
       }
-      queryClient.clear();
-      clearSession();
+      clearAllStores(queryClient);
     },
     onError: handleApiError,
   });
 };
 
 export const useChangePassword = () => {
-  const clearSession = useAuthStore((state) => state.clearSession);
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -158,8 +160,7 @@ export const useChangePassword = () => {
       }
       toast.success(data?.message || "Password changed successfully.");
       await signOutAll().catch(() => null);
-      queryClient.clear();
-      clearSession();
+      clearAllStores(queryClient);
     },
     onError: handleApiError,
   });

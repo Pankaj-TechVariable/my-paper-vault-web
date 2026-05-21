@@ -76,27 +76,31 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
     if (!statusIsActive(subscription)) return false;
     if (!subscription.subscriptionPlan.allow_family_connections) return false;
     const max = subscription.subscriptionPlan.max_family_connections;
-    return max === null || currentCount < max;
+    if (max === null) return false;
+    return currentCount < max;
   },
 
   canAddDirectoryMember: (currentCount: number) => {
     const { subscription } = get();
     if (!statusIsActive(subscription)) return false;
     const max = subscription.subscriptionPlan.max_directory_members;
-    return max === null || currentCount < max;
+    if (max === null) return false;
+    return currentCount < max;
   },
 
   canGrantUploadAccess: (currentCount: number) => {
     const { subscription } = get();
     if (!statusIsActive(subscription)) return false;
     const max = subscription.subscriptionPlan.max_upload_members;
-    return max === null || currentCount < max;
+    if (max === null) return false;
+    return currentCount < max;
   },
 
   canGrantDownloadAccess: (currentCount: number) => {
     const { subscription } = get();
     if (!statusIsActive(subscription)) return false;
     const max = subscription.subscriptionPlan.max_download_members;
-    return max === null || currentCount < max;
+    if (max === null) return false;
+    return currentCount < max;
   },
 }));

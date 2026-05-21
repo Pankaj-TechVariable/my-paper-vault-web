@@ -62,10 +62,15 @@ src/
 
 ```tsx
 // ✅ Dynamic icon — use createElement
-{createElement(getMimeIcon(doc.mime_type), { size: 14, color: style.iconColor })}
+{
+  createElement(getMimeIcon(doc.mime_type), {
+    size: 14,
+    color: style.iconColor,
+  });
+}
 
 // ✅ Static icon — use JSX directly
-<MdOutlineHome size={18} />
+<MdOutlineHome size={18} />;
 ```
 
 ---
@@ -81,11 +86,13 @@ Tailwind CSS v4 — utility-first, mobile-first.
 **Font weights:** `font-medium` (body), `font-semibold` (labels, buttons), `font-bold` (headings).
 
 **Card pattern:**
+
 ```tsx
 <div className="bg-white rounded-2xl border border-slate-100 p-4 md:p-5">
 ```
 
 **Active nav item** (sidebar):
+
 ```tsx
 className={`... border-r-3 ${active ? "bg-blue-50 text-primary border-primary" : "border-transparent text-slate-600 hover:bg-slate-100"}`}
 ```
@@ -95,12 +102,13 @@ className={`... border-r-3 ${active ? "bg-blue-50 text-primary border-primary" :
 **Responsive breakpoints:** `sm` 640, `md` 768, `lg` 1024, `xl` 1280. Mobile-first (no prefix = mobile).
 
 **Tailwind v4 `!important` modifier:** Use the **suffix** form `class!` — never the `!class` prefix form (that's v3 syntax and the linter will flag it):
+
 ```tsx
 // ✅ Correct (v4)
-className="h-auto! py-1! px-2.5! rounded-lg! text-xs!"
+className = "h-auto! py-1! px-2.5! rounded-lg! text-xs!";
 
 // ❌ Wrong (v3 — do not use)
-className="!h-auto !py-1 !px-2.5"
+className = "!h-auto !py-1 !px-2.5";
 ```
 
 **Stats/details sections hidden on mobile:** Use `hidden md:grid` (or `hidden md:flex`) to hide dashboard stat grids on small screens where they add noise.
@@ -120,16 +128,22 @@ className="!h-auto !py-1 !px-2.5"
 **Public endpoints** (no token): `/auth/signin`, `/auth/signup`, `/auth/verify`, `/auth/resend-verification`, `/auth/refresh-token`.
 
 **Endpoint function pattern:**
+
 ```ts
-export const getDocuments = async (params?: GetDocumentsParams): Promise<GetDocumentsResponse> => {
-  const { data } = await apiClient.GET('/documents', { params: { query: params } });
+export const getDocuments = async (
+  params?: GetDocumentsParams,
+): Promise<GetDocumentsResponse> => {
+  const { data } = await apiClient.GET("/documents", {
+    params: { query: params },
+  });
   return data!;
 };
 ```
 
 **API types** are auto-generated. Run `npm run api:types` to regenerate. Never manually edit `src/api/types.ts`. Derive exported types from the schema:
+
 ```ts
-export type Document = GetDocumentsResponse['data'][number];
+export type Document = GetDocumentsResponse["data"][number];
 ```
 
 ---
@@ -139,9 +153,9 @@ export type Document = GetDocumentsResponse['data'][number];
 All query keys go in `src/api/queryKeys.ts`. Use the factory pattern:
 
 ```ts
-queryKeys.documents.all()           // broad invalidation
-queryKeys.documents.list(params)    // scoped to specific params
-queryKeys.documents.count()
+queryKeys.documents.all(); // broad invalidation
+queryKeys.documents.list(params); // scoped to specific params
+queryKeys.documents.count();
 ```
 
 When adding a new domain, follow the same `all()` / `list(params)` pattern.
@@ -151,6 +165,7 @@ When adding a new domain, follow the same `all()` / `list(params)` pattern.
 ## Hooks
 
 ### useQuery pattern
+
 ```ts
 export const useDocuments = (params?: GetDocumentsParams) => {
   const query = useQuery<GetDocumentsResponse, AppError>({
@@ -158,7 +173,7 @@ export const useDocuments = (params?: GetDocumentsParams) => {
     queryFn: () => getDocuments(params),
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error) => {
-      if (error.code === 'NETWORK_ERROR') return false;
+      if (error.code === "NETWORK_ERROR") return false;
       if (error.status && error.status < 500) return false;
       return failureCount < 2;
     },
@@ -173,15 +188,21 @@ export const useDocuments = (params?: GetDocumentsParams) => {
 ```
 
 ### useMutation pattern
+
 ```ts
 export const useRenameDocument = () => {
   const queryClient = useQueryClient();
-  return useMutation<RenameDocumentResponse, AppError, { id: string; name: string }>({
+  return useMutation<
+    RenameDocumentResponse,
+    AppError,
+    { id: string; name: string }
+  >({
     mutationFn: ({ id, name }) => renameDocument(id, name),
     onSuccess: (data) => {
-      if (!data.success) return toast.error('Rename failed', 'Please try again.');
+      if (!data.success)
+        return toast.error("Rename failed", "Please try again.");
       queryClient.invalidateQueries({ queryKey: queryKeys.documents.all() });
-      toast.success('Document renamed');
+      toast.success("Document renamed");
     },
     onError: handleApiError,
   });
@@ -189,6 +210,7 @@ export const useRenameDocument = () => {
 ```
 
 **Rules:**
+
 - Always check `if (!data.success)` before `toast.success` — don't assume success on 200.
 - `onError: handleApiError` — always, no custom error handling in components.
 - `staleTime`: 5 min for documents/family data, 10 min for directories.
@@ -209,12 +231,13 @@ export const useRenameDocument = () => {
 **Never** show raw error messages in components. All errors go through `handleApiError`:
 
 ```ts
-import { handleApiError } from '@/errors/errorHandler';
+import { handleApiError } from "@/errors/errorHandler";
 ```
 
 `AppError` has `code?: string` and `status?: number`. Error codes: `NETWORK_ERROR`, `API_ERROR`.
 
 `handleApiError` maps status codes to user-friendly toast messages:
+
 - Network error → "No connection"
 - 401 → "Session expired"
 - 403 → "Access denied"
@@ -226,16 +249,21 @@ import { handleApiError } from '@/errors/errorHandler';
 
 ## Toast
 
-Import from `@/utils/toast` (re-exports from `@/lib/toast`):
+Import from `@/lib/toast` (re-exports from `@/lib/toast`):
 
 ```ts
-import { toast } from '@/utils/toast';
+import { toast } from "@/lib/toast";
 
-toast.success('Title');
-toast.success('Title', 'Message string');
-toast.success('Title', { message: 'Details', duration: 0 }); // duration: 0 → sticky
-toast.error('Title', 'Something went wrong');
-toast.fullscreen({ type: 'success', title: 'Done', message: 'Details', closable: true });
+toast.success("Title");
+toast.success("Title", "Message string");
+toast.success("Title", { message: "Details", duration: 0 }); // duration: 0 → sticky
+toast.error("Title", "Something went wrong");
+toast.fullscreen({
+  type: "success",
+  title: "Done",
+  message: "Details",
+  closable: true,
+});
 ```
 
 ---
@@ -265,6 +293,7 @@ Pass `...register("fieldName")` directly to `TextInput`/`PasswordInput`. Error m
 ## Components
 
 ### Button
+
 ```tsx
 <Button label="Save" variant="contained" onClick={fn} loading={isPending} />
 <Button label="Cancel" variant="outlined" />
@@ -277,16 +306,27 @@ Variants: `contained` (bg-primary, white text), `outlined` (border-primary), `te
 `loading` replaces startIcon with a spinner. `disabled` + `loading` both add `opacity-40 cursor-not-allowed`.
 
 ### TextInput
+
 ```tsx
-<TextInput label="Email Address" {...register("email")} error={errors.email?.message} />
+<TextInput
+  label="Email Address"
+  {...register("email")}
+  error={errors.email?.message}
+/>
 ```
 
 ### PasswordInput
+
 ```tsx
-<PasswordInput label="Password" {...register("password")} error={errors.password?.message} />
+<PasswordInput
+  label="Password"
+  {...register("password")}
+  error={errors.password?.message}
+/>
 ```
 
 ### StatCard
+
 ```tsx
 <StatCard
   label="Total Documents"
@@ -304,8 +344,13 @@ Variants: `contained` (bg-primary, white text), `outlined` (border-primary), `te
 ```
 
 ### DocumentItem
+
 ```tsx
-<DocumentItem document={doc} directory={dir} onClick={(doc) => navigate(`/documents/${doc.id}`)} />
+<DocumentItem
+  document={doc}
+  directory={dir}
+  onClick={(doc) => navigate(`/documents/${doc.id}`)}
+/>
 ```
 
 Renders: mime icon (category-colored), name, category badge (icon + dir name), date, file size, owner, chevron.
@@ -315,6 +360,7 @@ Automatically shows a **"Via Link"** badge (`FaLink` icon, indigo color) when `d
 ### ConfirmModal
 
 Use for all destructive confirmations — never inline confirm/cancel buttons in the list UI:
+
 ```tsx
 import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
@@ -326,13 +372,15 @@ import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
   onCancel={() => setConfirming(false)}
   loading={isRevoking}
   destructive
-/>
+/>;
 ```
+
 `destructive` prop styles the confirm button in red. `loading` disables both buttons and shows a spinner.
 
 ### Button — compact/inline variant
 
 `contained` variant defaults to `h-10`. Override with Tailwind v4 `!` suffix for inline/row buttons:
+
 ```tsx
 <Button
   label="Revoke"
@@ -346,20 +394,28 @@ import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 ### Slide-in Panel (right drawer)
 
 Full-screen on mobile, fixed-width on desktop. Use this structure:
+
 ```tsx
-{/* Backdrop */}
-{isOpen && (
-  <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} />
-)}
-{/* Panel */}
+{
+  /* Backdrop */
+}
+{
+  isOpen && (
+    <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} />
+  );
+}
+{
+  /* Panel */
+}
 <div
   className={`fixed top-0 right-0 z-50 h-full w-full sm:w-96 bg-white shadow-xl
     flex flex-col transition-transform duration-300
     ${isOpen ? "translate-x-0" : "translate-x-full"}`}
 >
   {/* header + scrollable body + footer */}
-</div>
+</div>;
 ```
+
 Reset form state when the panel closes via `useEffect(() => { if (!isOpen) resetForm(); }, [isOpen])`.
 
 ### Custom DropdownSelect (for fixed/overflow panels)
@@ -367,6 +423,7 @@ Reset form state when the panel closes via `useEffect(() => { if (!isOpen) reset
 **Never use native `<select>` inside a `position: fixed` or `overflow: hidden` container** — the browser renders the native dropdown relative to the viewport, making it appear in the wrong position.
 
 Use a custom dropdown instead:
+
 ```tsx
 const DropdownSelect = ({ placeholder, options, value, onChange, disabled }) => {
   const [open, setOpen] = useState(false);
@@ -404,18 +461,22 @@ const DropdownSelect = ({ placeholder, options, value, onChange, disabled }) => 
 ## Zustand Stores
 
 ### subscriptionStore
+
 ```ts
 const canManageFamily = useSubscriptionStore((s) => s.canManageFamily());
 ```
+
 Use `canManageFamily()` (and similar selectors) to gate features behind active subscription. Pass the result as `disabled` to buttons:
+
 ```tsx
 <Button label="Share Access" disabled={!canManageFamily()} ... />
 ```
 
 ### authStore
+
 ```ts
-const session = useAuthStore((s) => s.session);         // { tokens, user }
-const isLoading = useAuthStore((s) => s.isLoading);     // hydration flag
+const session = useAuthStore((s) => s.session); // { tokens, user }
+const isLoading = useAuthStore((s) => s.isLoading); // hydration flag
 const setSession = useAuthStore((s) => s.setSession);
 const clearSession = useAuthStore((s) => s.clearSession);
 ```
@@ -426,7 +487,8 @@ const clearSession = useAuthStore((s) => s.clearSession);
 `loadSession()` is called once in `App.tsx` on mount. Guards check `isLoading` before `session`.
 
 ### toastStore
-Not used directly in components — use `toast.fullscreen(...)` from `@/utils/toast`.
+
+Not used directly in components — use `toast.fullscreen(...)` from `@/lib/toast`.
 
 ---
 
@@ -452,22 +514,33 @@ Not used directly in components — use `toast.fullscreen(...)` from `@/utils/to
 All page components are `lazy()` loaded. `Suspense` wraps all routes with `PageLoader` fallback.
 
 **Adding a new private page:**
+
 1. Create `src/pages/MyPage/MyPage.tsx` + `index.ts`
 2. `lazy(() => import("@/pages/MyPage"))`
 3. Add inside `<ProtectedRoute><DashboardLayout>` block
 
 **Passing context to child routes via location state:**
+
 ```tsx
 // Sender (parent page)
 navigate(`/vaults/directory/${dir.id}`, {
-  state: { directoryName: dir.name, grantorName, categoryType: dir.category?.type },
+  state: {
+    directoryName: dir.name,
+    grantorName,
+    categoryType: dir.category?.type,
+  },
 });
 
 // Receiver (child page)
-interface MyPageState { directoryName?: string; grantorName?: string; categoryType?: string; }
+interface MyPageState {
+  directoryName?: string;
+  grantorName?: string;
+  categoryType?: string;
+}
 const { state } = useLocation() as { state: MyPageState | null };
 const directoryName = state?.directoryName ?? "Fallback Name";
 ```
+
 Use this pattern to pass display context (names, types) when navigating to a detail/sub-page so the child doesn't need an extra API call just to render a title.
 
 ---
@@ -475,12 +548,14 @@ Use this pattern to pass display context (names, types) when navigating to a det
 ## Layouts
 
 ### DashboardLayout (authenticated pages)
+
 - Topbar: full width, logo (mobile only), username + avatar
 - Sidebar desktop: fixed left, 240px, `border-r border-slate-100`
 - Sidebar mobile: full-height overlay drawer, backdrop, close button
 - `<Outlet />` renders the page inside the main scrollable area
 
 ### AppLayout (public pages)
+
 - `Navbar` + `<Outlet />` (flex-1) + `Footer`
 
 ---
@@ -500,10 +575,12 @@ src/pages/Home/
 ```
 
 **Rules:**
+
 - Page constants (static arrays with JSX icons) → `homeConstants.tsx` in the page folder.
 - Screen-level sub-sections (large blocks) → `components/` folder inside the page.
 - Reusable across pages → `src/components/common/`.
 - No business logic in page constants files — pure data.
+- **Every named component must live in its own file.** Never define a component inline inside a page file or another component file — not even small ones like skeletons, rows, or cards. If it has a name, it gets its own file under `components/`. The page file is a thin orchestrator: state, data fetching, and layout only.
 
 ---
 
@@ -512,8 +589,8 @@ src/pages/Home/
 `src/constants/categoryStyles.ts` maps API `category.type` strings to display styles:
 
 ```ts
-import { getCategoryStyle } from '@/constants/categoryStyles';
-const style = getCategoryStyle(dir?.category?.type ?? '');
+import { getCategoryStyle } from "@/constants/categoryStyles";
+const style = getCategoryStyle(dir?.category?.type ?? "");
 // style.icon    — IconType (react-icons/fa6)
 // style.bgColor — Tailwind class string ("bg-green-100")
 // style.iconColor — hex string ("#16a34a")
@@ -526,19 +603,22 @@ const style = getCategoryStyle(dir?.category?.type ?? '');
 ## Utilities
 
 ### document.utils.ts
+
 ```ts
-import { getMimeIcon, formatFileSize } from '@/utils/document.utils';
-getMimeIcon('application/pdf')  // → FaFilePdf (IconType)
-formatFileSize(1048576)         // → "1.0 MB"
+import { getMimeIcon, formatFileSize } from "@/utils/document.utils";
+getMimeIcon("application/pdf"); // → FaFilePdf (IconType)
+formatFileSize(1048576); // → "1.0 MB"
 ```
 
 ### deviceInfo.utils.ts
+
 Used only in `auth.ts` sign-in to attach device headers. Do not use elsewhere.
 
 ### env.ts
+
 ```ts
-import { env } from '@/config/env';
-env.apiUrl  // VITE_API_URL — throws if missing
+import { env } from "@/config/env";
+env.apiUrl; // VITE_API_URL — throws if missing
 ```
 
 Never access `import.meta.env` directly outside `src/config/env.ts`.
@@ -555,16 +635,19 @@ Never access `import.meta.env` directly outside `src/config/env.ts`.
 
 **Extending generated types for fields not yet in the spec:**
 When the API returns fields that `npm run api:types` hasn't picked up yet, extend locally with an intersection type and a comment:
+
 ```ts
 // Extend until `npm run api:types` picks up the updated spec.
-export type Document = GetDocumentsResponse['data'][number] & {
+export type Document = GetDocumentsResponse["data"][number] & {
   uploaded_via_link_id: string | null;
   uploaded_by: string | null;
 };
 ```
+
 Remove the extension (and the comment) after regenerating types.
 
 **Document upload source fields:**
+
 - `uploaded_via_link_id: string | null` — non-null means the document was uploaded via a public share link
 - `uploaded_by: string | null` — the uploader's display name (not a user ID); null when uploaded by the vault owner themselves
 
@@ -602,6 +685,7 @@ Always extract skeleton rows/items into a named component (e.g. `SkeletonRow`, `
 6. Sign-out calls `/auth/signout` then `clearSession()`.
 
 **Logout must clear the query cache.** All three logout paths (`useSignOut`, `useSignOutAll`, `useChangePassword`) must call `queryClient.clear()` before `clearSession()` — otherwise stale data from the previous session leaks into the next login:
+
 ```ts
 onSuccess: (data) => {
   if (!data.success) return toast.error(...);
@@ -615,22 +699,26 @@ onSuccess: (data) => {
 ## Adding New Features Checklist
 
 **New API domain:**
+
 1. Add endpoint functions in `src/api/endpoints/<domain>.ts`
 2. Export types derived from generated schema
 3. Add query keys in `src/api/queryKeys.ts`
 4. Add hook(s) in `src/hooks/use<Domain>.ts`
 
 **New page:**
+
 1. `src/pages/<Page>/<Page>.tsx` + `index.ts`
 2. Lazy-import in `src/router/index.tsx`
 3. Add route under correct guard + layout
 
 **New common component:**
+
 1. `src/components/common/<Name>/<Name>.tsx`
 2. Props interface at the top of the file
 3. Export default at the bottom
 
 **New form:**
+
 1. Zod schema in `src/schemas/<domain>.ts`
 2. Infer type: `export type FormData = z.infer<typeof Schema>`
 3. Use `useForm({ resolver: zodResolver(Schema) })`

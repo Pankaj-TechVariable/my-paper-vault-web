@@ -4,18 +4,18 @@ A secure document vault web application for storing, organizing, and sharing imp
 
 ## Tech Stack
 
-| Layer | Library |
-|---|---|
-| Framework | React 19 + TypeScript 6 |
-| Build | Vite 8 |
-| Styling | Tailwind CSS v4 |
-| Routing | React Router v7 |
-| Server state | TanStack React Query v5 |
-| Client state | Zustand v5 |
-| Forms | react-hook-form v7 + Zod v4 |
-| API client | openapi-fetch (typed from OpenAPI spec) |
-| Toasts | sonner v2 |
-| Icons | react-icons v5 |
+| Layer        | Library                                 |
+| ------------ | --------------------------------------- |
+| Framework    | React 19 + TypeScript 6                 |
+| Build        | Vite 8                                  |
+| Styling      | Tailwind CSS v4                         |
+| Routing      | React Router v7                         |
+| Server state | TanStack React Query v5                 |
+| Client state | Zustand v5                              |
+| Forms        | react-hook-form v7 + Zod v4             |
+| API client   | openapi-fetch (typed from OpenAPI spec) |
+| Toasts       | sonner v2                               |
+| Icons        | react-icons v5                          |
 
 ## Getting Started
 
@@ -115,7 +115,7 @@ src/
 
 - **Route guards:** `ProtectedRoute` redirects unauthenticated users to `/login`; `PublicOnlyRoute` redirects authenticated users to `/home`.
 - **Error handling:** All API errors flow through `handleApiError` — components never handle raw errors.
-- **Toasts:** Always import `toast` from `@/utils/toast`, never from sonner directly.
+- **Toasts:** Always import `toast` from `@/lib/toast`, never from sonner directly.
 - **Icons:** Prefer `react-icons/md` (Material Design) for UI elements; use `react-icons/fa6` for file and category icons.
 - **Dynamic icons:** Use `React.createElement(IconComponent, props)` instead of JSX when the icon is resolved at runtime to avoid the "Components created during render" error.
 

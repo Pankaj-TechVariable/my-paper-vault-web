@@ -9,7 +9,7 @@ import {
   MdOutlineLogout,
   MdClose,
 } from "react-icons/md";
-import { FaShieldAlt } from "react-icons/fa";
+// import { FaShieldAlt } from "react-icons/fa";
 import { BsPersonLock } from "react-icons/bs";
 
 import logo from "@/assets/logo/logo.png";
@@ -27,7 +27,7 @@ const navItems = [
     label: "My Family Vaults",
     to: "/family-vaults",
   },
-  { icon: FaShieldAlt, label: "Security", to: "/security" },
+  // { icon: FaShieldAlt, label: "Security", to: "/security" },
   { icon: MdOutlineCreditCard, label: "Subscription", to: "/subscription" },
 ];
 
