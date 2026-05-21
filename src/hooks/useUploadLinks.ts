@@ -3,10 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createUploadLink,
   deactivateUploadLink,
+  deactivateAllUploadLinks,
   getUploadLink,
   getUploadLinks,
   type CreateLinkResponse,
   type CreateUploadLinkParams,
+  type DeactivateAllLinksResponse,
   type GetLinkResponse,
   type GetLinksResponse,
   type GetUploadLinksParams,
@@ -69,6 +71,22 @@ export const useCreateUploadLink = (
       });
       toast.success("Secure link generated");
       onSuccess?.(data);
+    },
+    onError: handleApiError,
+  });
+};
+
+export const useDeactivateAllUploadLinks = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<DeactivateAllLinksResponse, AppError, void>({
+    mutationFn: deactivateAllUploadLinks,
+    onSuccess: (data) => {
+      if (!data.success) {
+        return toast.error("Failed to deactivate links", "Please try again.");
+      }
+      queryClient.invalidateQueries({ queryKey: queryKeys.uploadLinksPrivate.all() });
+      toast.success("All upload links deactivated", `${data.data.deactivated_count} link${data.data.deactivated_count !== 1 ? "s" : ""} deactivated.`);
     },
     onError: handleApiError,
   });

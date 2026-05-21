@@ -55,3 +55,12 @@ export const deactivateUploadLink = async (
   });
   return data!;
 };
+
+export type DeactivateAllLinksResponse =
+  components['schemas']['DeactivateAllLinksResponse'];
+
+export const deactivateAllUploadLinks =
+  async (): Promise<DeactivateAllLinksResponse> => {
+    const { data } = await apiClient.POST('/upload-links/deactivate-all', {});
+    return data!;
+  };

@@ -13,6 +13,7 @@ import {
   MdOutlineLock,
   MdOutlineDevices,
   MdOutlineChevronRight,
+  MdPersonOutline,
 } from "react-icons/md";
 import { BsPersonLock } from "react-icons/bs";
 
@@ -26,8 +27,12 @@ const navItems = [
   { icon: MdOutlineLink, label: "My Links", to: "/my-links" },
   { icon: MdOutlinePeopleAlt, label: "Family Members", to: "/family-members" },
   { icon: BsPersonLock, label: "Family Access", to: "/family-access" },
-  { icon: MdOutlineFolderSpecial, label: "My Family Vaults", to: "/family-vaults" },
-  { icon: MdOutlineCreditCard, label: "Profile", to: "/profile" },
+  {
+    icon: MdOutlineFolderSpecial,
+    label: "My Family Vaults",
+    to: "/family-vaults",
+  },
+  { icon: MdPersonOutline, label: "Profile", to: "/profile" },
   { icon: MdOutlineCreditCard, label: "Subscription", to: "/subscription" },
 ];
 
@@ -156,7 +161,11 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-2.5">
-            <img src={logo} alt="MyPaperVault" className="w-8 h-8 object-contain" />
+            <img
+              src={logo}
+              alt="MyPaperVault"
+              className="w-8 h-8 object-contain"
+            />
             <span
               className="font-extrabold text-sm text-slate-900"
               style={{ fontFamily: "'Sora', sans-serif" }}
